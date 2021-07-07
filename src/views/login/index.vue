@@ -1,13 +1,12 @@
 s<template>
   <div class="login-container">
     <div class="left-container">
-      <img src="../../assets/images/gfkd_logo.png" alt="logo">
+      <!-- <img src="../../assets/images/gfkd_logo.png" alt="logo"> -->
     </div>
     <div class="right-container">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <!-- <h3 class="title">创新院人工智能中心</h3> -->
-          <img src="../../assets/images/Mdregistered.png" alt="logo">
+          <h3 class="title">优颂乐器</h3>
         </div>
         <el-form-item prop="userName" class="user-name">
           <span class="svg-container">
@@ -264,12 +263,9 @@ $light_gray:#eee;
     .title-container {
       position: relative;
       margin-bottom: 100px;
-       img {
-         width: 100%;
-       }
       .title {
-        font-size: 26px;
-        color: #292F4C;
+        font-size: 30px;
+        color: #FFF;
         margin: 0px auto 40px auto;
         text-align: center;
         font-weight: bold;

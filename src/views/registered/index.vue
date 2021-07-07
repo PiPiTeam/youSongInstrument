@@ -3,14 +3,14 @@
     <el-header>
       <el-card class="box-card">
         <div class="imgBox">
-          <img src="../../assets/images/Mdregistered.png" alt="" @click="$router.push('/login')">
+          <h1 class="title" @click="$router.push('/login')">优颂乐器</h1>
           <span class="rightBox">已有账户, <span class="fontColor" @click="linkTo()">立即登录</span></span>
         </div>
       </el-card>
     </el-header>
     <el-main class="main">
       <div class="main_container">
-        <h3 class="fontStyle">注册新用户</h3>
+        <h3 class="fontStyle">申请入驻</h3>
         <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="userName">
             <el-input v-model.number="ruleForm.userName" placeholder="请输入您的用户名" />
@@ -33,18 +33,8 @@
           <el-form-item label="验证码" prop="emailVerificationCode">
             <el-input v-model="ruleForm.emailVerificationCode" placeholder="请输入您的验证码" />
           </el-form-item>
-          <el-form-item label="机构类型" prop="institutionalType">
-            <el-radio-group v-model="ruleForm.institutionalType">
-              <el-radio label="0">器械厂商</el-radio>
-              <el-radio label="1">医疗机构</el-radio>
-              <el-radio label="2">监管机构</el-radio>
-            </el-radio-group>
-          </el-form-item>
           <el-form-item label="机构名称" prop="nameOrganization">
             <el-input v-model="ruleForm.nameOrganization" placeholder="请输入机构名称(工商注册名称)" />
-          </el-form-item>
-          <el-form-item label="英文名称" prop="EnglishText">
-            <el-input v-model="ruleForm.EnglishText" placeholder="英文名称或者汉语拼音" />
           </el-form-item>
           <el-form-item label="机构代码" prop="institutionCode">
             <el-input v-model="ruleForm.institutionCode" placeholder="社会统一信用代码" />
@@ -76,7 +66,7 @@
               list-type="picture"
               :auto-upload="false"
             >
-              <el-button size="small" type="primary" style="width: 160px;margin:30px 0;background:#FF5338 ;border:none;">选择文件</el-button>
+              <el-button size="small" type="primary" style="width: 160px;background:#FF5338 ;border:none;">选择文件</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="机构简介" prop="desc">
@@ -204,11 +194,8 @@ export default {
         confirmPassword: '',
         email: '',
         emailVerificationCode: '',
-        institutionalType: '',
         nameOrganization: '',
         institutionCode: '',
-        EnglishText: '',
-        // InstitutionAddress: [],
         fileList: null,
         desc: ''
       },
@@ -225,9 +212,6 @@ export default {
         ],
         confirmPassword: [
           { validator: validatePass2, required: true, trigger: 'blur' }
-        ],
-        institutionalType: [
-          { required: true, message: '请选择机构类型', trigger: 'change' }
         ],
         nameOrganization: [
           { required: true, message: '请输入机构名称', trigger: 'change' }
@@ -416,11 +400,9 @@ export default {
           console.log(this.ruleForm.fileList, '56689')
           formdata.append('orgAdministratorPhone', this.ruleForm.phoneNumber)
           formdata.append('orgCode', this.ruleForm.institutionCode)
-          formdata.append('orgEnName', this.ruleForm.EnglishText)
           formdata.append('file', this.ruleForm.fileList)
           formdata.append('orgName', this.ruleForm.nameOrganization)
           formdata.append('orgProfiles', this.ruleForm.desc)
-          formdata.append('orgType', this.ruleForm.institutionalType)
           formdata.append('password', this.$md5(this.ruleForm.confirmPassword))
           formdata.append('email', this.ruleForm.email)
           formdata.append('emailVerificationCode', this.ruleForm.emailVerificationCode)
@@ -462,8 +444,8 @@ export default {
 
 <style lang="scss" scoped>
  .boxRegistered{
-     width: 100%;
-     .box-card{
+    width: 100%;
+    .box-card{
       width: 100%;
       padding: 0;
       .rightBox{
@@ -479,13 +461,11 @@ export default {
        }
       }
       .imgBox{
-
           width: 80%;
           margin: 10px auto;
 
-          img {
-              width: 290px;
-
+          .title {
+            display: inline;
           }
       }
   }
