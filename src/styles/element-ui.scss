@@ -1,0 +1,180 @@
+// cover some element-ui styles
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 4px;
+}
+
+// refine element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// to fix el-date-picker css style
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #FF5338 ;
+  color: #FFF; 
+}
+
+.el-input-group__append {
+  background: #FAFAFA;
+  font-family: PingFangSC-Regular;
+  font-size: 13px;
+  color: #666666;
+  line-height: 20px;
+  cursor: pointer;
+  border-radius: 0 6px 6px 0;
+}
+
+.el-input__inner {
+  border-radius: 6px;
+  border: 1px solid #E6E6E6;
+}
+
+.el-input__inner:hover {
+  color:#FF5338 ;
+  border: 1px solid #E6E6E6;
+}
+.el-dialog__title {
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+.el-dialog__body {
+  padding: 20px 20px 11.5px 20px;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+}
+.el-dialog__header {
+  border-radius: 4px 4px 0 0;
+  height: 36px;
+  line-height: 36px;
+  background: #F4F7FB;
+  padding:3px 7.7px 0 20px;
+}
+.el-dialog__headerbtn {
+  top:10px;
+  color: #666666;
+}
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background: #E4F1FF;
+  color: #292F4C ;
+}
+.el-table thead {
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: rgba(0,0,0,0.85);
+  line-height: 22px;
+}
+.el-table td {
+  border-bottom-color:  #E8E8E8;
+}
+table:before {
+  background-color: #E8E8E8;
+}
+.el-table__empty-text {
+  line-height: 100px;
+  min-height: 260px;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label {
+  color:#000
+}
+
+
+/* 橙色主题 */
+.el-table .descending .sort-caret.descending {
+  border-top-color: #FF5338  ;
+}
+
+.el-table .ascending .sort-caret.ascending {
+  border-bottom-color: #FF5338 ;
+  top: 5px;
+}
+
+.el-divider--horizontal {
+  width: 170px;
+  margin: 0 auto;
+  opacity: 0.2;
+  border: 1px solid #F0F2F5;
+}
+
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: #FF5338 ;
+}
+
+.el-input.is-active .el-input__inner, .el-input__inner:focus,
+.el-range-editor.is-active, .el-range-editor.is-active:hover,
+.el-cascader .el-input .el-input__inner:focus, .el-cascader .el-input.is-focus .el-input__inner,
+.el-select .el-input.is-focus .el-input__inner,
+.el-select .el-input__inner:focus,
+.el-pagination__sizes .el-input .el-input__inner:hover,
+.el-checkbox__input.is-focus .el-checkbox__inner,
+.el-checkbox__inner:hover,
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-textarea__inner:focus,
+.el-checkbox__input.is-checked .el-checkbox__inner, 
+.el-checkbox__input.is-indeterminate .el-checkbox__inner,
+.el-button--primary {
+  border-color: #F98866;
+}
+
+.el-button--primary.is-disabled, .el-button--primary.is-disabled:active, .el-button--primary.is-disabled:focus, .el-button--primary.is-disabled:hover {
+  color: #FFF;
+  background-color: rgba(254, 136, 102, 0.5);
+  border-color: rgba(254, 136, 102, 0.5);
+}
+
+.el-select-dropdown__item.selected,
+.el-radio-button__inner:hover,
+.el-switch__label.is-active,
+.el-cascader-node.in-active-path,
+.el-cascader-node.is-active {
+  color: #FF5338;
+}
+
+.el-radio-button__orig-radio:checked+.el-radio-button__inner,
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #FF5338 ;
+}

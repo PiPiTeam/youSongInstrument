@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="90px" height="91px" viewBox="0 0 90 91" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 8</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="自定义色板-搜索为空" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-186.000000, -226.000000)">
+        <g id="Group-8" transform="translate(187.000000, 226.000000)">
+            <path d="M74.0410024,24.2325475 L76.6706054,24.2325475 C83.3265989,24.2325475 88.7230252,18.807907 88.7230252,12.1162738 C88.7230252,5.42316923 83.3269731,0 76.6706054,0 L65.2124198,0 C58.5564263,0 53.16,5.42464053 53.16,12.1162738 C53.16,18.8093783 58.5560521,24.2325475 65.2124198,24.2325475 L67.8420228,24.2325475 L69.663025,26.0627657 C70.368969,26.7722824 71.513911,26.7724284 72.2200002,26.0627657 L74.0410024,24.2325475 L74.0410024,24.2325475 Z" id="Rectangle-20" fill="#D1D1D1"></path>
+            <circle id="Oval-6" fill="#BFBFBF" cx="69.7327731" cy="47.005042" r="1.54621849"></circle>
+            <circle id="Oval-6-Copy" fill="#BFBFBF" cx="76.2268908" cy="47.005042" r="1.54621849"></circle>
+            <circle id="Oval-6-Copy-2" fill="#BFBFBF" cx="83.0302521" cy="47.005042" r="1.54621849"></circle>
+            <circle id="Oval-14" stroke="#BFBFBF" stroke-width="1.2" cx="28.9226891" cy="47.1596639" r="22.4201681"></circle>
+            <ellipse id="Oval-5" stroke="#BFBFBF" stroke-width="1.2" cx="29.0768462" cy="46.8504202" rx="28.7591992" ry="28.605042"></ellipse>
+            <path d="M29.0773109,62.4672269 C37.4460493,62.4672269 44.2302521,55.683024 44.2302521,47.3142857" id="Oval-15" stroke="#BFBFBF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <g id="Group-7" transform="translate(61.486696, 79.823242) rotate(45.000000) translate(-61.486696, -79.823242) translate(47.986696, 75.823242)" stroke="#BFBFBF" stroke-width="1.2">
+                <rect id="Rectangle-22" x="0.6" y="0.6" width="25.394958" height="6.22184874" rx="3.11092437"></rect>
+                <path d="M6.55260498,0.589935988 L6.5274769,6.80353071" id="Path-8"></path>
+            </g>
+            <path d="M50.7243697,65.8689076 L53.9313583,69" id="Path-9" stroke="#BFBFBF" stroke-width="1.2"></path>
+            <path d="M47.6319328,68.3428571 L51.2166051,71.9277669" id="Path-9-Copy" stroke="#BFBFBF" stroke-width="1.2"></path>
+            <text id="Oops!" font-family="ArialRoundedMTBold, Arial Rounded MT Bold" font-size="7.52941176" font-weight="normal" fill="#FFFFFF" fill-opacity="0.85">
+                <tspan x="59.88" y="14.2">Oops!</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
