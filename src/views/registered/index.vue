@@ -327,7 +327,7 @@ export default {
     // 获取验证码
     async handleSendVerificationCode() {
       const formdata = new FormData()
-      formdata.append('subject', '医疗器械系统用户注册')
+      formdata.append('subject', '系统用户注册')
       formdata.append('targetEmailAddress', this.ruleForm.email)
 
       await getSendVerificationCode(formdata).then(res => {

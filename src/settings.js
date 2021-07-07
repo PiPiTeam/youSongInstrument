@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '医疗器械信息采报管理系统',
+  title: '优颂乐器后台管理系统',
 
   /**
    * @type {boolean} true | false
