@@ -25,7 +25,7 @@ export default {
   position: relative;
   overflow: hidden;
   padding: 0px 20px 20px 20px;
-  background: #1e1d2c;
+  /* background: #1e1d2c; */
 }
 .fixed-header+.app-main {
   padding-top: 50px;
