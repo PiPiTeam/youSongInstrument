@@ -71,6 +71,17 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/newActivity',
+    component: Layout,
+    redirect: '/newActivity/newActivity',
+    children: [{
+      path: 'newActivity',
+      name: 'NewActivity',
+      component: () => import('@/views/newActivity/index'),
+      meta: { title: '最新活动', icon: 'dashboard' }
+    }]
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
