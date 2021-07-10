@@ -68,6 +68,11 @@ export const constantRoutes = [
       name: 'Banner',
       component: () => import('@/views/banner/index'),
       meta: { title: '轮播图', icon: 'dashboard' }
+    }, {
+      path: 'shopintroduction',
+      name: 'ShopIntroduction',
+      component: () => import('@/views/shopIntroduction/index'),
+      meta: { title: '店铺介绍', icon: 'dashboard' }
     }]
   },
   {

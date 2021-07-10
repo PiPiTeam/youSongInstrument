@@ -18,9 +18,13 @@
       />
 
       <el-table-column
-        prop="province"
+        prop="reservation"
         label="预约人数"
-      />
+      >
+        <template slot-scope="scope">
+          <span class="reservation-num" @click="showReservation(scope.row.reservation)">{{ scope.row.reservation }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="date"
         label="修改时间"
@@ -68,7 +72,27 @@
       :visible.sync="detailDialog.visible"
       append-to-body
     >
-      <!--  -->
+      <el-table
+        :data="detailDialog.tableData"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="name"
+          label="用户名称"
+        />
+        <el-table-column
+          prop="phone"
+          label="联系方式"
+        />
+        <el-table-column
+          prop="date"
+          label="操作时间"
+        />
+        <el-table-column
+          prop="address"
+          label="预约状态"
+        />
+      </el-table>
     </el-dialog>
   </div>
 </template>
@@ -84,14 +108,14 @@ export default {
         province: '上海',
         city: '普陀区',
         address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
+        reservation: 200
       }, {
         date: '2016-05-04',
         name: '王小虎',
         province: '上海',
         city: '普陀区',
         address: '上海市普陀区金沙江路 1517 弄',
-        zip: 200333
+        reservation: 333
       }],
       dialog: {
         visible: false,
@@ -104,7 +128,18 @@ export default {
       },
       detailDialog: {
         visible: false,
-        title: '西西活动预约情况'
+        title: '西西活动预约情况',
+        tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          phone: '18229952439',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          phone: '18229952439',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }]
       },
       reviewRules: {}
     }
@@ -120,7 +155,10 @@ export default {
 
     },
     cancel() {
-
+      this.dialog.visible = false
+    },
+    showReservation(reservation) {
+      this.detailDialog.visible = true
     }
   }
 }
@@ -132,5 +170,9 @@ export default {
 }
 .mr-10 {
   margin-right: 10px;
+}
+.reservation-num {
+  color: #409EFF;
+  cursor: pointer;
 }
 </style>
