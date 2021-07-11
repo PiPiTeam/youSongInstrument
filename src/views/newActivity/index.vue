@@ -34,7 +34,6 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
           <el-button type="text" size="small">修改</el-button>
           <el-button type="text" size="small" class="red-txt">删除</el-button>
         </template>
@@ -145,9 +144,6 @@ export default {
     }
   },
   methods: {
-    handleClick(row) {
-      console.log(row)
-    },
     add() {
       this.dialog.visible = true
     },

@@ -1,20 +1,24 @@
 <template>
-  <!-- 热门课程 -->
-  <div class="popular-courses">
+  <!-- 店铺地址 -->
+  <div class="shop-address">
     <el-form ref="formRef" :model="dataForm" :rules="rules" label-width="100px" label-position="right">
-      <el-form-item label="课程名称" prop="coursesName">
-        <el-input v-model="dataForm.coursesName" placeholder="请输入活动名称" />
+      <el-form-item label="店铺名称" prop="shopName">
+        <el-input v-model="dataForm.shopName" placeholder="请输入活动名称" />
       </el-form-item>
-      <el-form-item label="授课老师" prop="tearcherName">
-        <el-input v-model="dataForm.tearcherName" placeholder="请输入授课老师" />
+      <el-form-item label="店铺地址" prop="address">
+        <el-input v-model="dataForm.address" placeholder="请输入店铺地址" />
       </el-form-item>
-      <el-form-item label="课程介绍" prop="coursesDesc">
-        <el-input v-model="dataForm.coursesDesc" type="textarea" placeholder="请输入课程介绍" class="review-name" rows="2" maxlength="200" show-word-limit />
+      <el-form-item label="联系电话" prop="phone">
+        <el-input v-model="dataForm.phone" placeholder="请输入联系电话" />
       </el-form-item>
-      <el-form-item label="产品图片" prop="picList">
+      <el-form-item label="微信" prop="wx">
+        <el-input v-model="dataForm.wx" placeholder="请输入微信" />
+      </el-form-item>
+      <el-form-item label="店铺Logo" prop="picList">
         <el-upload
           action="/"
           list-type="picture-card"
+          :limit="1"
           :auto-upload="false"
           :on-preview="handlePictureCardPreview"
           :file-list="dataForm.picList"
@@ -35,15 +39,16 @@
 
 <script>
 export default {
-  name: 'PopularCourses',
+  name: 'ShopAddress',
   data() {
     return {
       dialogVisible: false,
       dialogImageUrl: '',
       dataForm: {
-        coursesName: '',
-        tearcherName: '',
-        coursesDesc: '',
+        shopName: '',
+        address: '',
+        phone: '',
+        wx: '',
         picList: []
       },
       rules: {}
@@ -65,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.popular-courses {
+.shop-address {
   margin-top: 20px;
 }
 </style>

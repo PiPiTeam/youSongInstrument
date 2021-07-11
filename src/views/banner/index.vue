@@ -47,7 +47,7 @@ export default {
 }
 </script>
 
-<style lang="banner" scoped>
+<style lang="scss" scoped>
 
 </style>
 
