@@ -5,7 +5,6 @@
     </el-row>
     <el-table
       :data="tableData"
-      border
       style="width: 100%"
     >
       <el-table-column
@@ -29,11 +28,20 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small">修改</el-button>
-          <el-button type="text" size="small" class="red-txt">删除</el-button>
+          <el-button size="mini">修改</el-button>
+          <el-button type="danger" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <div class="paging">
+      <pagination
+        v-if="pager.total > 0"
+        :total="pager.total"
+        :page.sync="pager.current"
+        :limit.sync="pager.size"
+        @pagination="_getPageList"
+      />
+    </div>
 
     <el-dialog
       width="50%"
@@ -106,8 +114,12 @@
 </template>
 
 <script>
+import Pagination from '@/components/Pagination'
 export default {
   name: 'BestSellingGoods',
+  components: {
+    Pagination
+  },
   data() {
     return {
       dialogVisible: false,
@@ -153,6 +165,11 @@ export default {
           address: '上海市普陀区金沙江路 1517 弄'
         }]
       },
+      pager: {
+        current: 1,
+        size: 10,
+        total: 1
+      },
       rules: {}
     }
   },
@@ -172,6 +189,9 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+    },
+    _getPageList() {
+
     }
   }
 }

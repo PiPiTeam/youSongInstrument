@@ -44,26 +44,26 @@ export function getUserInfo() {
   })
 }
 // 注册
-export function getRegistered(params) {
+export function getRegistered(data) {
   return request({
-    url: '/registered',
+    url: '/user/register',
     method: 'post',
-    data: params
+    data
   })
 }
 // 发送验证码
-export function getSendVerificationCode(params) {
+export function getSendVerificationCode(data) {
   return request({
-    url: '/email/sendVerificationCode',
+    url: '/verification-code/email',
     method: 'post',
-    data: params
+    data
   })
 }
 // 重置密码
-export function getResetPassword(params) {
+export function getResetPassword(data) {
   return request({
     url: '/sysUser/resetPassword',
     method: 'post',
-    data: params
+    data
   })
 }

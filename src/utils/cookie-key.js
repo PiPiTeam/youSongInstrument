@@ -1,6 +1,6 @@
-const TokenKey = 'image_annotation_system_token'
-const TokenExpired = 'image_annotation_expired'
-const UserNoKey = 'image_annotation_userno'
+const TokenKey = 'yousong_system_token'
+const TokenExpired = 'yousong_expired'
+const UserNoKey = 'yousong_userno'
 export {
   TokenKey,
   TokenExpired,

@@ -65,6 +65,7 @@ s<template>
 </template>
 
 <script>
+import { setToken } from '@/utils/auth'
 // import { validUsername } from '@/utils/validate'
 
 export default {
@@ -129,18 +130,21 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.loginForm.password = this.$md5(this.loginForm.password)
+          setToken('mock-yousong')
+          this.$message.success('登陆成功')
+          this.$router.push({ path: '/' })
+          // this.loading = true
+          // this.loginForm.password = this.$md5(this.loginForm.password)
 
-          this.$store.dispatch('loginByUsername', this.loginForm).then(res => {
-            this.$message.success('登陆成功')
+          // this.$store.dispatch('loginByUsername', this.loginForm).then(res => {
+          //   this.$message.success('登陆成功')
 
-            this.$router.push({ path: '/' })
-            this.loading = false
-          }).catch(error => {
-            this.$message.error(error)
-            this.loading = false
-          })
+          //   this.$router.push({ path: '/' })
+          //   this.loading = false
+          // }).catch(error => {
+          //   this.$message.error(error)
+          //   this.loading = false
+          // })
         } else {
           return false
         }
@@ -288,12 +292,4 @@ $light_gray:#eee;
     }
   }
 }
-</style>
-<style>
- .bt-login .el-button:hover {
-    border-color: #fff;
-  }
- .login-form .el-form-item__error {
-    z-index: 1;
-  }
 </style>

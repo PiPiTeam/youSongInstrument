@@ -378,9 +378,7 @@ border: 1px solid #E6E6E6;
 .el-input--medium .el-input__inner {
   height: 40px;
   line-height: 40px;
-  background: #33354B;
   border-radius: 20px;
-  border: none;
 }
 
 .el-table::before{height: 0;}
@@ -399,7 +397,5 @@ border: 1px solid #E6E6E6;
 .flex-from {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px dashed #3E3F54;
 }

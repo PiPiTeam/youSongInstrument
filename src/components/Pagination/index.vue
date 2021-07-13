@@ -11,9 +11,7 @@
       v-bind="$attrs"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    >
-      <el-button type="primary" class="go">Go</el-button>
-    </el-pagination>
+    />
   </div>
 </template>
 
@@ -102,15 +100,5 @@ export default {
 }
 .f-r {
   float: right;
-}
-.go {
-  background: #FF5338;
-}
-.go:hover {
-  color: #FFF;
-}
-::v-deep .el-pagination__jump {
-  margin-left: 8px;
-  font-size: 0 !important;
 }
 </style>

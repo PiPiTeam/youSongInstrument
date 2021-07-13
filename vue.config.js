@@ -37,18 +37,11 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '/kpi-dev': {
-        target: 'http://192.168.0.21', // 后端接口地址
+      '/dev': {
+        target: 'http://172.18.10.5:8001', // 后端接口地址
         changeOrigin: true, // 是否跨域
         pathRewrite: {
-          '^/kpi-dev': '/'
-        }
-      },
-      '/kpi-test': {
-        target: 'http://192.168.0.21', // 后端接口地址
-        changeOrigin: true, // 是否跨域
-        pathRewrite: {
-          '^/kpi-test': '/'
+          '^/dev': '/'
         }
       }
     },

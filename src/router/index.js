@@ -49,64 +49,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '主页', icon: 'dashboard' }
-    }]
-  },
-  {
-    path: '/setting',
-    component: Layout,
-    redirect: '/setting/banner',
-    children: [{
-      path: 'banner',
-      name: 'Banner',
-      component: () => import('@/views/banner/index'),
-      meta: { title: '轮播图', icon: 'dashboard' }
-    }, {
-      path: 'student-elegant-demeanor',
-      name: 'studentElegantDemeanor',
-      component: () => import('@/views/studentElegantDemeanor/index'),
-      meta: { title: '学员风采', icon: 'dashboard' }
-    }, {
-      path: 'shopintroduction',
-      name: 'ShopIntroduction',
-      component: () => import('@/views/shopIntroduction/index'),
-      meta: { title: '店铺介绍', icon: 'dashboard' }
-    }, {
-      path: 'best-selling-goods',
-      name: 'bestSellingGoods',
-      component: () => import('@/views/bestSellingGoods/index'),
-      meta: { title: '热销产品', icon: 'dashboard' }
-    }, {
-      path: 'popular-courses',
-      name: 'popularCourses',
-      component: () => import('@/views/popularCourses/index'),
-      meta: { title: '热门课程', icon: 'dashboard' }
-    }, {
-      path: 'shop-address',
-      name: 'shopAddress',
-      component: () => import('@/views/shopAddress/index'),
-      meta: { title: '店铺地址', icon: 'dashboard' }
-    }]
-  },
-  {
-    path: '/newActivity',
-    component: Layout,
-    redirect: '/newActivity/newActivity',
-    children: [{
-      path: 'newActivity',
-      name: 'NewActivity',
-      component: () => import('@/views/newActivity/index'),
-      meta: { title: '最新活动', icon: 'dashboard' }
-    }]
-  },
-  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true

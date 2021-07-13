@@ -111,9 +111,7 @@
 </template>
 
 <script>
-import {
-  getRegistered, getSendVerificationCode
-} from '@/api/login'
+import { getRegistered, getSendVerificationCode } from '@/api/login'
 
 export default {
   data() {
@@ -181,7 +179,7 @@ export default {
       // 是否禁用按钮
       codeDisabled: false,
       // 倒计时秒数
-      countdown: 120,
+      countdown: 60,
       // 按钮上的文字
       codeMsg: '获取验证码',
       // 定时器
@@ -301,14 +299,14 @@ export default {
       // 验证码60秒倒计时
       if (!this.timer) {
         this.timer = setInterval(() => {
-          if (this.countdown > 0 && this.countdown <= 120) {
+          if (this.countdown > 0 && this.countdown <= 60) {
             this.countdown--
             if (this.countdown !== 0 && this.ruleForm.email) {
-              this.codeMsg = '重新发送(' + this.countdown + ')'
+              this.codeMsg = '重新发送(' + this.countdown + 's )'
             } else {
               clearInterval(this.timer)
               this.codeMsg = '获取验证码'
-              this.countdown = 120
+              this.countdown = 60
               this.timer = null
               this.codeDisabled = false
             }
@@ -326,12 +324,12 @@ export default {
     },
     // 获取验证码
     async handleSendVerificationCode() {
-      const formdata = new FormData()
-      formdata.append('subject', '系统用户注册')
-      formdata.append('targetEmailAddress', this.ruleForm.email)
-
+      const formdata = {
+        receiveEmail: this.ruleForm.email,
+        type: 'register'
+      }
       await getSendVerificationCode(formdata).then(res => {
-
+        console.log(res)
       }).catch(error => {
         if (this.ruleForm.email === '') {
           this.$message({

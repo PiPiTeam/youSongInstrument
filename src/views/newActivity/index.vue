@@ -5,7 +5,6 @@
     </el-row>
     <el-table
       :data="tableData"
-      border
       style="width: 100%"
     >
       <el-table-column
@@ -34,37 +33,21 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small">修改</el-button>
-          <el-button type="text" size="small" class="red-txt">删除</el-button>
+          <el-button size="mini">修改</el-button>
+          <el-button type="danger" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <el-dialog
-      width="30%"
-      :title="dialog.title"
-      :visible.sync="dialog.visible"
-      append-to-body
-    >
-      <el-form ref="formRef" :model="dataForm" :rules="reviewRules" label-width="100px" label-position="right">
-        <el-form-item label="活动名称" prop="activeName">
-          <el-input v-model="dataForm.activeName" placeholder="请输入活动名称" />
-        </el-form-item>
-        <el-form-item label="发布时间" prop="pushDate">
-          <el-date-picker v-model="dataForm.pushDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间" />
-        </el-form-item>
-        <el-form-item label="预约人数" prop="likePeople">
-          <el-input v-model="dataForm.likePeople" type="number" placeholder="请输入初始预约人数" />
-        </el-form-item>
-        <!-- <el-form-item label="评审意见" prop="reviewOpinion">
-          <el-input v-model="dataForm.reviewOpinion" type="textarea" placeholder="请输入评审意见" class="review-name" rows="3" maxlength="500" show-word-limit />
-        </el-form-item> -->
-      </el-form>
-      <el-row slot="footer" type="flex" justify="center" class="dialog-footer">
-        <el-button @click="submit">提交</el-button>
-        <el-button @click="cancel">取消</el-button>
-      </el-row>
-    </el-dialog>
+    <div class="paging">
+      <pagination
+        v-if="pager.total > 0"
+        :total="pager.total"
+        :page.sync="pager.current"
+        :limit.sync="pager.size"
+        @pagination="_getPageList"
+      />
+    </div>
+    <!-- 详情 -->
     <el-dialog
       width="50%"
       :title="detailDialog.title"
@@ -97,8 +80,12 @@
 </template>
 
 <script>
+import Pagination from '@/components/Pagination'
 export default {
-
+  name: 'NewActivity',
+  components: {
+    Pagination
+  },
   data() {
     return {
       tableData: [{
@@ -116,15 +103,6 @@ export default {
         address: '上海市普陀区金沙江路 1517 弄',
         reservation: 333
       }],
-      dialog: {
-        visible: false,
-        title: '新增活动'
-      },
-      dataForm: {
-        activeName: '',
-        pushDate: '',
-        likePeople: 0
-      },
       detailDialog: {
         visible: false,
         title: '西西活动预约情况',
@@ -140,21 +118,23 @@ export default {
           address: '上海市普陀区金沙江路 1517 弄'
         }]
       },
+      pager: {
+        current: 1,
+        size: 10,
+        total: 1
+      },
       reviewRules: {}
     }
   },
   methods: {
     add() {
-      this.dialog.visible = true
-    },
-    submit() {
-
-    },
-    cancel() {
-      this.dialog.visible = false
+      this.$router.push({ path: 'add', query: { id: 0 }})
     },
     showReservation(reservation) {
       this.detailDialog.visible = true
+    },
+    _getPageList() {
+
     }
   }
 }

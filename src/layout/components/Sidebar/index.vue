@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="false" />
-    <el-divider style="width:215px" />
+    <el-divider />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-openeds="open_list"
