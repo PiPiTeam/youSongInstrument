@@ -3,7 +3,7 @@
     <el-header>
       <el-card class="box-card">
         <div class="imgBox">
-          <h1 class="title" @click="$router.push('/login')">优颂乐器</h1>
+          <h1 class="title" @click="$router.push('/login')">后台模板</h1>
           <span class="rightBox">已有账户, <span class="fontColor" @click="linkTo()">立即登录</span></span>
         </div>
       </el-card>
@@ -12,33 +12,42 @@
       <div class="main_container">
         <h3 class="fontStyle">申请入驻</h3>
         <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm">
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model.number="ruleForm.userName" placeholder="请输入您的用户名" />
+          <el-form-item label="用户名" prop="nickName">
+            <el-input v-model.number="ruleForm.nickName" placeholder="请输入您的用户名" />
           </el-form-item>
-          <el-form-item label="手机号" prop="phoneNumber">
-            <el-input v-model.number="ruleForm.phoneNumber" placeholder="请输入您的手机号码" />
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model.number="ruleForm.mobile" placeholder="请输入您的手机号码" />
           </el-form-item>
-
           <el-form-item label="密码" prop="password">
             <el-input v-model="ruleForm.password" type="password" placeholder="请输入您的密码" show-password />
           </el-form-item>
-          <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="ruleForm.confirmPassword" type="password" placeholder="请再次输入您的密码" show-password />
+          <el-form-item label="确认密码" prop="passwordCopy">
+            <el-input v-model="ruleForm.passwordCopy" type="password" placeholder="请再次输入您的密码" show-password />
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="ruleForm.email" placeholder="请输入您的邮箱" style="width: 40%;" />
             <!-- <el-button type="primary" style="margin-left: 6px;background:#FF5338 ;border:none;"  @click="handleSendVerificationCode()">获取验证码</el-button> -->
-            <input v-model="codeMsg" type="button" class="getNumber" :disabled="codeDisabled" style="width: 20%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;" @click="getCode">
+            <input v-model="codeMsg" type="button" class="getNumber" :disabled="codeDisabled" style="width: 22%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;" @click="getCode">
           </el-form-item>
-          <el-form-item label="验证码" prop="emailVerificationCode">
-            <el-input v-model="ruleForm.emailVerificationCode" placeholder="请输入您的验证码" />
+          <el-form-item label="验证码" prop="verificationCode">
+            <el-input v-model="ruleForm.verificationCode" placeholder="请输入您的验证码" />
           </el-form-item>
-          <el-form-item label="机构名称" prop="nameOrganization">
-            <el-input v-model="ruleForm.nameOrganization" placeholder="请输入机构名称(工商注册名称)" />
+          <el-form-item label="所在城市" prop="selectedOptions">
+            <el-cascader
+              v-model="ruleForm.selectedOptions"
+              size="large"
+              :options="regionOptions"
+              @change="handleChange"
+            />
           </el-form-item>
-          <el-form-item label="机构代码" prop="institutionCode">
+          <el-form-item label="机构名称" prop="institutionName">
+            <el-input v-model="ruleForm.institutionName" placeholder="请输入机构名称(工商注册名称)" />
+          </el-form-item>
+
+          <!-- <el-form-item label="机构代码" prop="institutionCode">
             <el-input v-model="ruleForm.institutionCode" placeholder="社会统一信用代码" />
-          </el-form-item>
+          </el-form-item> -->
+
           <!-- <el-form-item label="机构地址" prop="InstitutionAddress">
                         <el-cascader
                         v-model="ruleForm.InstitutionAddress"
@@ -69,17 +78,14 @@
               <el-button size="small" type="primary" style="width: 160px;background:#FF5338 ;border:none;">选择文件</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="机构简介" prop="desc">
+          <!-- <el-form-item label="机构简介" prop="desc">
             <el-input
               v-model="ruleForm.desc"
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="请输入机构简介"
             />
-          </el-form-item>
-          <!-- <el-form-item label="验证码" prop="desc">
-
-                    </el-form-item> -->
+          </el-form-item> -->
           <el-form-item>
             <el-button type="primary" style="width:100%;margin:30px 0;background:#FF5338 ;border:none;" @click="submitForm('ruleForm')">注册</el-button>
           </el-form-item>
@@ -93,7 +99,7 @@
       >
         <div v-if="!textHidden" class="dialogBox">
           <img src="../../assets/images/sad.png" alt=""><span style="color: red;">注册失败</span>
-          <div class="dialogMT">该机构已注册，请联系010-88888888咨询</div>
+          <div class="dialogMT">该机构已注册，请联系管理员咨询</div>
         </div>
         <div v-if="textHidden" class="dialogBox">
           <img src="../../assets/images/succeed.png" alt=""><span style="color: #1AD66C;">注册成功</span>
@@ -111,6 +117,7 @@
 </template>
 
 <script>
+import { regionData } from 'element-china-area-data'
 import { getRegistered, getSendVerificationCode } from '@/api/login'
 
 export default {
@@ -119,8 +126,8 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
-        if (this.ruleForm.confirmPassword !== '') {
-          this.$refs.ruleForm.validateField('confirmPassword')
+        if (this.ruleForm.passwordCopy !== '') {
+          this.$refs.ruleForm.validateField('passwordCopy')
         }
         callback()
       }
@@ -186,32 +193,31 @@ export default {
       timer: null,
       dialogVisible: false,
       ruleForm: {
-        userName: '',
-        phoneNumber: '',
+        nickName: '',
+        mobile: '',
         password: '',
-        confirmPassword: '',
+        passwordCopy: '',
         email: '',
-        emailVerificationCode: '',
-        nameOrganization: '',
-        institutionCode: '',
+        verificationCode: '',
+        institutionName: '',
         fileList: null,
-        desc: ''
+        selectedOptions: []
       },
       rules: {
-        userName: [
+        nickName: [
           { required: true, message: '请输入您的用户名', trigger: 'change' }
         ],
-        phoneNumber: [
+        mobile: [
           { required: true, validator: checkPhone, trigger: 'blur' },
           { type: 'number', message: '手机号必须为数字值' }
         ],
         password: [
           { validator: validatePass, required: true, trigger: 'blur' }
         ],
-        confirmPassword: [
+        passwordCopy: [
           { validator: validatePass2, required: true, trigger: 'blur' }
         ],
-        nameOrganization: [
+        institutionName: [
           { required: true, message: '请输入机构名称', trigger: 'change' }
         ],
         institutionCode: [
@@ -240,7 +246,7 @@ export default {
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
-        emailVerificationCode: [
+        verificationCode: [
           { required: true, message: '请输入邮箱验证码', trigger: 'change' }
         ],
         //   InstitutionAddress: [
@@ -248,6 +254,9 @@ export default {
         //   ],
         fileList: [
           { required: true, message: '请上传机构营业执照', trigger: 'blur' }
+        ],
+        selectedOptions: [
+          { required: true, message: '请选择所在城市', trigger: 'change' }
         ]
       },
       valTextarea: '',
@@ -291,10 +300,14 @@ export default {
           }]
         }]
       }],
-      textHidden: false
+      textHidden: false,
+      regionOptions: regionData
     }
   },
   methods: {
+    handleChange(value) {
+      console.log(value)
+    },
     getCode() {
       // 验证码60秒倒计时
       if (!this.timer) {
@@ -395,38 +408,35 @@ export default {
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm.fileList, '56689')
-          formdata.append('orgAdministratorPhone', this.ruleForm.phoneNumber)
-          formdata.append('orgCode', this.ruleForm.institutionCode)
-          formdata.append('file', this.ruleForm.fileList)
-          formdata.append('orgName', this.ruleForm.nameOrganization)
-          formdata.append('orgProfiles', this.ruleForm.desc)
-          formdata.append('password', this.$md5(this.ruleForm.confirmPassword))
+          console.log(this.ruleForm.fileList, 'licenseFile')
+          formdata.append('mobile', this.ruleForm.mobile)
+          // formdata.append('orgCode', this.ruleForm.institutionCode)
+          formdata.append('licenseFile', this.ruleForm.fileList)
+          formdata.append('institutionName', this.ruleForm.institutionName)
+          formdata.append('password', this.ruleForm.password)
+          formdata.append('passwordCopy', this.ruleForm.passwordCopy)
           formdata.append('email', this.ruleForm.email)
-          formdata.append('emailVerificationCode', this.ruleForm.emailVerificationCode)
-          formdata.append('review', '0')
-          formdata.append('userName', this.ruleForm.userName)
+          formdata.append('verificationCode', this.ruleForm.verificationCode)
+          formdata.append('nickName', this.ruleForm.nickName)
+          // 省市区
+          const province = this.ruleForm.selectedOptions[0]
+          const city = this.ruleForm.selectedOptions[1]
+          const district = this.ruleForm.selectedOptions[2]
+          formdata.append('province', province)
+          formdata.append('city', city)
+          formdata.append('district', district)
           getRegistered(formdata).then(res => {
             console.log(res, 'ddd')
-            if (res.data.code === '200') {
+            if (res.data.code === '10000') { // 成功
               this.dialogVisible = true
               this.textHidden = true
-            } else {
+            } else { // 异常
               this.dialogVisible = true
               this.textHidden = false
             }
           }).catch(error => {
             this.$message.error(error)
           })
-          //   this.$store.dispatch('getRegistered', params).then(res => {
-          //      this.dialogVisible = true
-          //     this.textHidden = true
-
-          // }).catch(error => {
-          //   // this.$message.error(error)
-          //     this.dialogVisible = true
-          //    this.textHidden = false
-          // })
         } else {
           this.$message({
             message: '请查看必填信息是否完善',

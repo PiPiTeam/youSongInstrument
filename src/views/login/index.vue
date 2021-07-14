@@ -6,31 +6,31 @@ s<template>
     <div class="right-container">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <h3 class="title">优颂乐器</h3>
+          <h3 class="title">后台模板</h3>
         </div>
-        <el-form-item prop="userName" class="user-name">
+        <el-form-item prop="email" class="user-name">
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
           <el-input
             ref="username"
-            v-model="loginForm.userName"
+            v-model="loginForm.email"
             placeholder="账号"
-            name="username"
+            name="email"
             type="text"
             tabindex="1"
             auto-complete="on"
           />
         </el-form-item>
 
-        <el-form-item prop="password" class="password" style="margin-bottom: 0;">
+        <el-form-item prop="pwd" class="password" style="margin-bottom: 0;">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
           <el-input
             :key="passwordType"
             ref="password"
-            v-model="loginForm.password"
+            v-model="loginForm.pwd"
             :type="passwordType"
             placeholder="密码"
             name="password"
@@ -65,17 +65,14 @@ s<template>
 </template>
 
 <script>
-import { setToken } from '@/utils/auth'
-// import { validUsername } from '@/utils/validate'
+// import { setToken } from '@/utils/auth'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入账号'))
-      } else if (value.length < 3) {
-        callback(new Error('账号长度不超过3位'))
+        callback(new Error('请输入邮箱账号'))
       } else {
         callback()
       }
@@ -89,12 +86,12 @@ export default {
     }
     return {
       loginForm: {
-        userName: '',
-        password: ''
+        email: '',
+        pwd: ''
       },
       loginRules: {
-        userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        email: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        pwd: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
       passwordType: 'password',
@@ -130,21 +127,21 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          setToken('mock-yousong')
-          this.$message.success('登陆成功')
-          this.$router.push({ path: '/' })
-          // this.loading = true
+          // setToken('mock-yousong')
+          // this.$message.success('登陆成功')
+          // this.$router.push({ path: '/' })
+          this.loading = true
           // this.loginForm.password = this.$md5(this.loginForm.password)
 
-          // this.$store.dispatch('loginByUsername', this.loginForm).then(res => {
-          //   this.$message.success('登陆成功')
+          this.$store.dispatch('loginByUsername', this.loginForm).then(res => {
+            this.$message.success('登陆成功')
 
-          //   this.$router.push({ path: '/' })
-          //   this.loading = false
-          // }).catch(error => {
-          //   this.$message.error(error)
-          //   this.loading = false
-          // })
+            this.$router.push({ path: '/' })
+            this.loading = false
+          }).catch(error => {
+            this.$message.error(error)
+            this.loading = false
+          })
         } else {
           return false
         }

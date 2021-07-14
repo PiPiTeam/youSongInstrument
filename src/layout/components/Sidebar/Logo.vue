@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      title: '优颂乐器',
+      title: '后台模板',
       logo: '' // require('@/assets/images/HomeLogo.png')
     }
   }

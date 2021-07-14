@@ -3,19 +3,19 @@
     <el-row type="flex" class="mt-20">
       <el-form v-model="query" :inline="true">
         <el-form-item label="名称">
-          <el-input v-model="query.username" placeholder="请输入名称" clearable />
+          <el-input v-model="query.institutionName" placeholder="请输入名称" clearable />
         </el-form-item>
         <el-form-item label="入驻状态">
-          <el-select v-model="query.enterStatus">
-            <el-option label="已通过" value="1" />
-            <el-option label="待审核" value="2" />
-            <el-option label="已驳回" value="3" />
+          <el-select v-model="query.auditStatus">
+            <el-option label="已通过" :value="1" />
+            <el-option label="待审核" :value="2" />
+            <el-option label="已驳回" :value="3" />
           </el-select>
         </el-form-item>
         <el-form-item label="服务状态">
-          <el-select v-model="query.serveStatus">
-            <el-option label="开启" value="1" />
-            <el-option label="关闭" value="2" />
+          <el-select v-model="query.enableStatus">
+            <el-option label="启用" :value="1" />
+            <el-option label="禁用" :value="2" />
           </el-select>
         </el-form-item>
         <el-button @click="_getPageList">搜索</el-button>
@@ -30,28 +30,30 @@
       style="width: 100%;"
       highlight-current-row
     >
-      <el-table-column prop="name" label="用户绑定机构名" />
-      <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="threeMonth" label="近3个月拿货" sortable />
-      <el-table-column prop="oneMonth" label="近1个月拿货" sortable />
-      <el-table-column prop="enterStatus" label="入驻状态">
+      <el-table-column prop="institutionName" label="用户绑定机构名" />
+      <el-table-column prop="mobile" label="电话" />
+      <el-table-column prop="quarterSales" label="近3个月拿货" sortable />
+      <el-table-column prop="monthlySales" label="近1个月拿货" sortable />
+      <el-table-column prop="auditStatus" label="入驻状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.enterStatus === '1'" class="role-tag">已通过</el-tag>
-          <el-tag v-else-if="scope.row.enterStatus === '2'" class="role-tag">待审核</el-tag>
-          <el-tag v-else-if="scope.row.enterStatus === '3'" class="role-tag">已驳回</el-tag>
+          <el-tag v-if="scope.row.auditStatus === 1" class="role-tag" type="success">已通过</el-tag>
+          <el-tag v-else-if="scope.row.auditStatus === 2" class="role-tag">待审核</el-tag>
+          <el-tag v-else-if="scope.row.auditStatus === 3" class="role-tag" type="danger">已驳回</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="serveStatus" label="服务状态">
+      <el-table-column prop="enableStatus" label="服务状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.serveStatus === '1'" class="role-tag">开启</el-tag>
-          <el-tag v-else-if="scope.row.serveStatus === '2'" class="role-tag">关闭</el-tag>
+          <el-tag v-if="scope.row.enableStatus === 1" class="role-tag" type="success">启用</el-tag>
+          <el-tag v-else-if="scope.row.enableStatus === 2" class="role-tag" type="danger">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="serveCode" label="服务ID" />
-      <el-table-column label="操作">
+      <el-table-column prop="serviceId" label="服务ID" />
+      <el-table-column prop="createTime" label="入驻时间" />
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button size="mini">审核</el-button>
-          <el-button size="mini" type="danger">关闭服务</el-button>
+          <el-button v-show="scope.row.auditStatus === 2" size="mini" @click="showReview(scope.row.id)">审核</el-button>
+          <el-button v-if="scope.row.enableStatus === 1" size="mini" type="danger" @click="_changeEnableStatus(2, scope.row.id)">关闭服务</el-button>
+          <el-button v-else size="mini" @click="_changeEnableStatus(1, scope.row.id)">开启服务</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,13 +66,48 @@
         @pagination="_getPageList"
       />
     </div>
+    <!-- 审核弹窗 -->
+    <el-dialog
+      title="入驻审核"
+      :visible.sync="dialogVisible"
+      width="50%"
+      :show-close="false"
+    >
+      <el-form v-model="reviewData">
+        <el-form-item label="机构名称">
+          {{ reviewData.institutionName }}
+        </el-form-item>
+        <el-form-item label="电话">
+          {{ reviewData.mobile }}
+        </el-form-item>
+        <el-form-item label="机构所在地区">
+          <span>{{ CodeToText[reviewData.province] }} </span>
+          <span>{{ CodeToText[reviewData.city] }} </span>
+          <span>{{ CodeToText[reviewData.district] }}</span>
+        </el-form-item>
+        <el-form-item label="申请时间">
+          {{ reviewData.createTime }}
+        </el-form-item>
+        <el-form-item label="营业执照">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="license(reviewData.license)"
+            :preview-src-list="[license(reviewData.license)]"
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="_changeUserStatus(3)">驳回</el-button>
+        <el-button type="primary" @click="_changeUserStatus(1)">通过</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getUserList } from '@/api/user'
-import { getSysList } from '@/api/sys'
+import { CodeToText } from 'element-china-area-data'
+import { getUserList, getUserById, changeUserStatus, changeEnableStatus } from '@/api/user'
 
 export default {
   name: 'User',
@@ -80,23 +117,16 @@ export default {
   filters: {},
   data() {
     return {
+      CodeToText: CodeToText,
       query: {
-        username: '',
-        enterStatus: '',
-        serveStatus: ''
+        institutionName: '',
+        auditStatus: '', // 入驻审核状态
+        enableStatus: '' // 服务状态
       },
       loading: false,
-      tableData: [
-        {
-          name: 'xxx琴行',
-          phone: '13166665555',
-          threeMonth: 120,
-          oneMonth: 40,
-          enterStatus: '1',
-          serveStatus: '1',
-          serveCode: 'adabadfa2234'
-        }
-      ],
+      tableData: [],
+      reviewData: {},
+      dialogVisible: false,
       pager: {
         current: 1,
         size: 10,
@@ -113,12 +143,15 @@ export default {
     }
   },
   mounted() {
-    // this._getPageList()
-    // this._getSysList()
+    this.requestTable()
   },
   methods: {
     requestTable() {
-
+      this.pager.current = 1
+      this._getPageList()
+    },
+    showReview(id) {
+      this._getUserById(id)
     },
     async _getPageList(pager) {
       try {
@@ -133,9 +166,29 @@ export default {
         this.loading = false
       }
     },
-    async _getSysList() {
-      const { data } = await getSysList({ size: 9999 })
-      this.roles = data.data.records
+    async _getUserById(id) {
+      const { data } = await getUserById(id)
+      this.reviewData = data.data
+      this.dialogVisible = true
+    },
+    async _changeUserStatus(status) {
+      const { data } = await changeUserStatus({ auditStatus: status, id: this.reviewData.id })
+      if (data.code === '10000') {
+        this.$message.success('入驻状态修改成功')
+        this.dialogVisible = false
+        this.reviewData = {}
+        this._getPageList()
+      }
+    },
+    async _changeEnableStatus(enableStatus, id) {
+      const { data } = await changeEnableStatus({ enableStatus, id })
+      if (data.code === '10000') {
+        this.$message.success('服务状态修改成功')
+        this._getPageList()
+      }
+    },
+    license(url) {
+      return `http://172.18.10.5:8001/static/${url}`
     }
   }
 }

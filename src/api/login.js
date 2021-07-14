@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 import { getUserNo } from '@/utils/auth'
 
-export function loginByUsername(userName, password, code, token, key) {
+export function loginByUsername(email, pwd, code, token, key) {
   const data = {
-    account: userName,
-    pwd: password
+    email,
+    pwd
   }
   // 登录
   return request({

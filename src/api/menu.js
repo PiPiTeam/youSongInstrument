@@ -3,10 +3,10 @@ import request from '@/utils/request'
 // 获取路由
 export const getRouters = () => {
   const userData = {
-    uuid: localStorage.getItem('uuid')
+    userId: localStorage.getItem('youSongUserId')
   }
   return request({
-    url: 'sysMenu/getUserMenuTree',
+    url: '/menu/getMenuTreeByUserId',
     method: 'get',
     params: userData
   })

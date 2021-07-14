@@ -192,7 +192,7 @@ export default {
           formdata.append('code', this.ruleForm.emailVerificationCode)
           getResetPassword(formdata).then(res => {
             console.log(res, 'ddd77')
-            if (res.data.code === '200') {
+            if (res.data.code === '10000') {
               this.$message({
                 message: '重置密码成功',
                 type: 'success'

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '优颂乐器后台管理系统',
+  title: '后台模板后台管理系统',
 
   /**
    * @type {boolean} true | false

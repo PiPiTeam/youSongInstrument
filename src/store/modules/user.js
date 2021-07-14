@@ -70,9 +70,8 @@ const user = {
     // user login
     // loginByUsername
     loginByUsername({ commit }, userInfo) {
-      const userName = userInfo.userName.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(userName, userInfo.password).then(res => {
+        loginByUsername(userInfo.email, userInfo.pwd).then(res => {
           const data = res.data
           if (data.data) {
             commit('SET_TOKEN', data.data.token.token)
@@ -80,21 +79,13 @@ const user = {
             // commit('SET_NAME', data.data.userVO.username)
             // 头像
             // commit('SET_AVATAR', data.data.user.avatar)
-            // uuid
-            commit('SET_UUID', data.data.userVO.uuid)
             // 权限
-            // commit('SET_ROUTES', data.data.menuVOs)
-
-            localStorage.setItem('orgUuid', data.data.orgUuid)
-            localStorage.setItem('uuid', data.data.userVO.uuid)
-            localStorage.setItem('username', data.data.userVO.userName)
+            commit('SET_ROUTES', data.data.menuVOs)
+            localStorage.setItem('youSongUserId', data.data.userVO.id)
+            localStorage.setItem('nickName', data.data.userVO.nickName)
             localStorage.setItem('avatar', data.data.userVO.avatar)
-            localStorage.setItem('roleCode', data.data.roleVOs[0].code)
-            const roleId = []
-            data.data.roleVOs.forEach(element => {
-              roleId.push(element.roleId)
-            })
-            localStorage.setItem('roleId', roleId.join(','))
+            localStorage.setItem('roleCode', data.data.roleVOs.code)
+            localStorage.setItem('roleId', data.data.roleVOs.id)
             // setUserNo(data.data.userVO.userId)
             setToken(data.data.token.token)
 
