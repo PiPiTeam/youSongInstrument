@@ -6,12 +6,12 @@
         v-if="collapse"
         key="collapse"
         class="sidebar-logo-link"
-        to="/"
+        to="/shopAddress/shopAddress"
       >
         <div v-if="logo" class=" bg-logo " />
         <h1 v-else class="sidebar-title">{{ title }} </h1>
       </router-link>
-      <router-link v-else key="expand" class="sidebar-logo-link" to="/">
+      <router-link v-else key="expand" class="sidebar-logo-link" to="/shopAddress/shopAddress">
         <!-- <img v-if="logo" :src="logo" class="sidebar-logo"> -->
         <div v-if="logo" class=" bg-logo " />
         <h1 v-else class="sidebar-title">{{ title }} </h1>
