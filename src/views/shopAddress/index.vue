@@ -44,6 +44,7 @@ export default {
   name: 'ShopAddress',
   data() {
     return {
+      imgHost: process.env.VUE_APP_IMAGE_HOST,
       dialogVisible: false,
       dialogImageUrl: '',
       dataForm: {
@@ -89,10 +90,19 @@ export default {
     submit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return
+        const formData = new FormData()
+        formData.append('name', this.dataForm.name)
+        formData.append('address', this.dataForm.address)
+        formData.append('phone', this.dataForm.phone)
+        formData.append('wechat', this.dataForm.wechat)
+        if (this.dataForm.picList.length && this.dataForm.picList[0].raw) {
+          formData.append('logoFile', this.dataForm.picList[0].raw)
+        }
         if (this.isEdit) {
-          this._updateStore()
+          formData.append('id', this.dataForm.id)
+          this._updateStore(formData)
         } else {
-          this._addStore()
+          this._addStore(formData)
         }
       })
     },
@@ -105,22 +115,24 @@ export default {
       if (data.data && data.data.length) {
         this.isEdit = true
         this.dataForm = data.data[0]
+        const nameArr = this.dataForm.logo.split('/')
+        const filename = nameArr[nameArr.length - 1]
+        this.dataForm.picList = [{
+          name: filename,
+          url: this.imgHost + this.dataForm.logo
+        }]
         console.log(this.dataForm)
       }
     },
-    async _addStore() {
-      const formData = new FormData()
-      formData.append('name', this.dataForm.name)
-      formData.append('address', this.dataForm.address)
-      formData.append('phone', this.dataForm.phone)
-      formData.append('wechat', this.dataForm.wechat)
-      formData.append('logoFile', this.dataForm.picList[0].raw)
+    async _addStore(formData) {
       const { data } = await addStore(formData)
       console.log(data)
+      this.$message.success('保存成功')
     },
-    async _updateStore() {
-      const { data } = await updateStore()
+    async _updateStore(formData) {
+      const { data } = await updateStore(formData)
       console.log(data)
+      this.$message.success('保存成功')
     }
   }
 }

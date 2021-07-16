@@ -9,10 +9,7 @@ import { getRouters } from '@/api/menu'
 NProgress.configure({ showSpinner: false })
 
 const whiteList = [
-  '/login', '/registered', '/resetPassword',
-  '/banner/banner', '/shopintroduction/shopintroduction', '/student-elegant-demeanor/student-elegant-demeanor',
-  '/best-selling-goods/best-selling-goods', '/popular-courses/popular-courses', '/shop-address/shop-address',
-  '/newActivity/newActivity', 'newActivity/add'
+  '/login', '/registered', '/resetPassword'
 ]
 
 router.beforeEach(async(to, from, next) => {

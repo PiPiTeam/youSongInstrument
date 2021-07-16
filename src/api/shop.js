@@ -8,7 +8,7 @@ export function getShopList(params) {
   })
 }
 
-// 新增
+// 新增店铺
 export function addStore(data) {
   return request({
     url: '/store',
@@ -25,3 +25,29 @@ export function updateStore(data) {
     data
   })
 }
+
+export function getBannerList(id) {
+  return request({
+    url: `/store/${id}/banner/list`,
+    method: 'get'
+  })
+}
+
+// 新增banner
+export function addBanner(shopId, data) {
+  return request({
+    url: `/store/${shopId}/banner`,
+    method: 'post',
+    data
+  })
+}
+
+// 删除banner fileIds
+export function deleteBanner(shopId, data) {
+  return request({
+    url: `/store/${shopId}/banner`,
+    method: 'delete',
+    data
+  })
+}
+

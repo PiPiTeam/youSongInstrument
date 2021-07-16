@@ -65,7 +65,8 @@ s<template>
 </template>
 
 <script>
-// import { setToken } from '@/utils/auth'
+import { getShopList } from '@/api/shop'
+import { setShopId } from '@/utils/auth'
 
 export default {
   name: 'Login',
@@ -134,8 +135,8 @@ export default {
           // this.loginForm.password = this.$md5(this.loginForm.password)
 
           this.$store.dispatch('loginByUsername', this.loginForm).then(res => {
+            this.getShopId()
             this.$message.success('登陆成功')
-
             this.$router.push({ path: '/' })
             this.loading = false
           }).catch(error => {
@@ -146,6 +147,12 @@ export default {
           return false
         }
       })
+    },
+    async getShopId() {
+      const { data } = await getShopList()
+      if (data.data && data.data.length) {
+        setShopId(data.data[0].id)
+      }
     }
   }
 }

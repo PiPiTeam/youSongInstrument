@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { TokenKey, TokenExpired, UserNoKey } from '@/utils/cookie-key'
+import { TokenKey, TokenExpired, UserNoKey, shopKey } from '@/utils/cookie-key'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -35,4 +35,12 @@ export function setUserNo(UserNo) {
 
 export function removeUserNo() {
   return Cookies.remove(UserNoKey)
+}
+
+export function setShopId(shopId) {
+  return Cookies.set(shopKey, shopId)
+}
+
+export function getShopId() {
+  return Cookies.get(shopKey)
 }
