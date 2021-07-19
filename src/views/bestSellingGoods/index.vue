@@ -63,13 +63,14 @@
         <el-form-item label="折扣价" prop="discountPrice">
           <el-input v-model="dataForm.discountPrice" type="number" placeholder="请输入折扣价" />
         </el-form-item>
-        <el-form-item label="产品图片" prop="picList">
+        <el-form-item label="产品图片" prop="fileList">
           <el-upload
             action="/"
             list-type="picture-card"
             :auto-upload="false"
             :on-preview="handlePictureCardPreview"
-            :file-list="dataForm.picList"
+            :on-change="handleChange"
+            :file-list="dataForm.fileList"
           >
             <i class="el-icon-plus" />
           </el-upload>
@@ -135,11 +136,12 @@ export default {
         title: '新增产品'
       },
       dataForm: {
+        id: '',
         title: '',
         content: '',
         marketPrice: '',
         discountPrice: '',
-        picList: []
+        fileList: []
       },
       detailDialog: {
         visible: false,
@@ -161,7 +163,23 @@ export default {
         size: 10,
         total: 1
       },
-      rules: {}
+      rules: {
+        title: [
+          { required: true, message: '请输入产品名称', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入产品描述', trigger: 'blur' }
+        ],
+        marketPrice: [
+          { required: true, message: '请输入市场价', trigger: 'blur' }
+        ],
+        discountPrice: [
+          { required: true, message: '请输入折扣价', trigger: 'blur' }
+        ],
+        fileList: [
+          { required: true, message: '请上传产品图片', trigger: 'change' }
+        ]
+      }
     }
   },
   computed: {
@@ -181,13 +199,43 @@ export default {
       this.dialog.visible = true
     },
     submit() {
-
+      this.$refs.formRef.validate(valid => {
+        if (!valid) return
+        if (this.dataForm.id) {
+          //
+        } else {
+          const formData = new FormData()
+          formData.append('storeId', this.shopId)
+          formData.append('title', this.dataForm.title)
+          formData.append('teacher', this.dataForm.teacher)
+          formData.append('content', this.dataForm.content)
+          for (const i in this.dataForm.fileList) {
+            formData.append(`imgFiles[${i}]`, this.dataForm.fileList[i].raw)
+          }
+        }
+      })
     },
     cancel() {
       this.dialog.visible = false
     },
     showReservation(reservation) {
       this.detailDialog.visible = true
+    },
+    handleChangeUpdata(file) {
+      this.file = file.raw
+    },
+    handleChange(file, fileList) {
+      const isIMAGE = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      if (!isIMAGE) {
+        this.$message.error('只能上传jpg/png图片!')
+        return false
+      }
+      if (fileList.length && fileList.length >= 1) {
+        this.dataForm.fileList = fileList
+        /** 引用对象然后验证表单域-这个可以清除上一步不通过时的提示*/
+        this.$refs.formRef.validateField('fileList')
+      }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url

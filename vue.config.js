@@ -38,14 +38,13 @@ module.exports = {
     },
     proxy: {
       '/dev': {
-        target: 'http://172.18.10.5:8001', // 后端接口地址
+        target: 'http://118.195.176.248:8001', // 后端接口地址
         changeOrigin: true, // 是否跨域
         pathRewrite: {
           '^/dev': '/'
         }
       }
-    },
-    before: require('./mock/mock-server.js')
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

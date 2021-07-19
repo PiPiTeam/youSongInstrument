@@ -1,6 +1,7 @@
 <template>
   <!-- 店铺地址 -->
   <div class="shop-address">
+    <el-row v-if="!dataForm.id" class="red pl-20">暂无店铺，请先创建店铺</el-row>
     <el-form ref="formRef" :model="dataForm" :rules="rules" label-width="100px" label-position="right">
       <el-form-item label="店铺名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="请输入活动名称" />
@@ -33,13 +34,14 @@
     </el-row>
     <!-- 预览图片 -->
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="课程图片">
+      <img width="100%" :src="dialogImageUrl" alt="店铺Logo">
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { getShopList, addStore, updateStore } from '@/api/shop'
+import { setShopId } from '@/utils/auth'
 export default {
   name: 'ShopAddress',
   data() {
@@ -121,13 +123,16 @@ export default {
           name: filename,
           url: this.imgHost + this.dataForm.logo
         }]
+        setShopId(this.dataForm.id)
         console.log(this.dataForm)
       }
     },
     async _addStore(formData) {
       const { data } = await addStore(formData)
-      console.log(data)
-      this.$message.success('保存成功')
+      if (data.code === '10000') {
+        this.$message.success('保存成功')
+        this._getShopList()
+      }
     },
     async _updateStore(formData) {
       const { data } = await updateStore(formData)

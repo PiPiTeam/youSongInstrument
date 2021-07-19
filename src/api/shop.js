@@ -68,6 +68,24 @@ export function setIntro(shopId, data) {
   })
 }
 
+// 添加店铺简介图片
+export function addIntroImg(id, data) {
+  return request({
+    url: `/store/${id}/intro/image`,
+    method: 'post',
+    data
+  })
+}
+
+// 删除店铺简介图片
+export function deleteIntroImg(id, data) {
+  return request({
+    url: `/store/${id}/intro/image`,
+    method: 'delete',
+    data
+  })
+}
+
 // 活动分页
 export function getActivityPageList(params) {
   return request({
@@ -127,5 +145,50 @@ export function getProductPageList(params) {
     url: `/product/page-list`,
     method: 'get',
     params
+  })
+}
+
+// 课程列表
+export function getCoursePageList(params) {
+  return request({
+    url: `/course/list`,
+    method: 'get',
+    params
+  })
+}
+
+// 新增课程
+export function addCourse(data) {
+  return request({
+    url: `/course`,
+    method: 'post',
+    data
+  })
+}
+
+// 添加课程图片
+export function addCourseImg(id, data) {
+  return request({
+    url: `/course/${id}/image`,
+    method: 'post',
+    data
+  })
+}
+
+// 修改课程图片
+export function updataCourse(data) {
+  return request({
+    url: `/course`,
+    method: 'put',
+    data
+  })
+}
+
+// 删除课程图片
+export function deleteCourseImg(id, data) {
+  return request({
+    url: `/course/${id}/image`,
+    method: 'delete',
+    data
   })
 }

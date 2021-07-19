@@ -1,18 +1,34 @@
 <template>
   <div class="banner-container">
     <h3>轮播图设置</h3>
+    <ul class="el-upload-list el-upload-list--picture-card f-l">
+      <li v-for="_file in fileList" :key="_file.id" class="el-upload-list__item is-ready ">
+        <div>
+          <img :src="_file.url" alt="" class="el-upload-list__item-thumbnail">
+          <span class="el-upload-list__item-actions">
+            <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(_file)">
+              <i class="el-icon-zoom-in" />
+            </span>
+            <span class="el-upload-list__item-delete" @click="handleRemove(_file)">
+              <i class="el-icon-delete" />
+            </span>
+          </span>
+        </div>
+      </li>
+    </ul>
     <el-upload
+      class="f-l"
       action="/"
-      list-type="picture-card"
       :limit="5"
+      :show-file-list="false"
       :auto-upload="true"
-      :on-preview="handlePictureCardPreview"
-      :on-remove="handleRemove"
       :on-change="handleChange"
-      :file-list="fileList"
       :http-request="uploadFile"
     >
-      <i class="el-icon-plus" />
+      <div v-show="fileList.length < 5" slot="default" class="el-upload el-upload--picture-card">
+        <i class="el-icon-plus" />
+        <input type="file" name="file" class="el-upload__input">
+      </div>
     </el-upload>
     <!-- <el-row type="flex" justify="center">
       <el-button type="primary" @click="submit">保存</el-button>

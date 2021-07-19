@@ -253,7 +253,7 @@ export default {
         //     { type: 'array',  required: true, message: '请填写机构地址', trigger: 'blur' }
         //   ],
         fileList: [
-          { required: true, message: '请上传机构营业执照', trigger: 'blur' }
+          { required: true, message: '请上传机构营业执照', trigger: 'change' }
         ],
         selectedOptions: [
           { required: true, message: '请选择所在城市', trigger: 'change' }

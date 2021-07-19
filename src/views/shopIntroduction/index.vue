@@ -1,17 +1,37 @@
 <template>
   <div class="tearcher-container">
     <h3>店铺图片展示</h3>
-    <el-upload
-      action="/"
-      list-type="picture-card"
-      :auto-upload="false"
-      :on-preview="handlePictureCardPreview"
-      :on-remove="handleRemove"
-      :on-change="handleChange"
-      :file-list="fileList"
-    >
-      <i class="el-icon-plus" />
-    </el-upload>
+    <el-row>
+      <ul class="el-upload-list el-upload-list--picture-card f-l">
+        <li v-for="_file in fileList" :key="_file.id" class="el-upload-list__item is-ready ">
+          <div>
+            <img :src="_file.url" alt="" class="el-upload-list__item-thumbnail">
+            <span class="el-upload-list__item-actions">
+              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(_file)">
+                <i class="el-icon-zoom-in" />
+              </span>
+              <span class="el-upload-list__item-delete" @click="handleRemove(_file)">
+                <i class="el-icon-delete" />
+              </span>
+            </span>
+          </div>
+        </li>
+      </ul>
+      <el-upload
+        class="f-l"
+        action="/"
+        :limit="5"
+        :show-file-list="false"
+        :auto-upload="true"
+        :http-request="uploadFile"
+        :on-change="handleChange"
+      >
+        <div v-show="fileList.length < 5" slot="default" class="el-upload el-upload--picture-card">
+          <i class="el-icon-plus" />
+          <input type="file" name="file" class="el-upload__input">
+        </div>
+      </el-upload>
+    </el-row>
     <h3>本店介绍</h3>
     <div>
       <el-input v-model="shopDesc" :rows="3" type="textarea" placeholder="请输入店铺介绍" />
@@ -27,7 +47,7 @@
 
 <script>
 import { getShopId } from '@/utils/auth'
-import { getIntro, setIntro } from '@/api/shop'
+import { getIntro, setIntro, addIntroImg, deleteIntroImg } from '@/api/shop'
 export default {
   name: 'ShopIntroduction',
   data() {
@@ -51,11 +71,22 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
+    async handleRemove(file) {
+      const formData = new FormData()
+      formData.append('fileIds', file.id)
+      formData.append('id', this.shopId)
+      const { data } = await deleteIntroImg(this.shopId, formData)
+      if (data.code === '10000') {
+        for (const i in this.fileList) {
+          if (this.fileList[i].id === file.id) {
+            this.fileList.splice(i, 1)
+            break
+          }
+        }
+      }
     },
-    handleChange() {
-
+    handleChange(file) {
+      this.file = file.raw
     },
     async _setIntro() {
       if (this.shopDesc) {
@@ -70,9 +101,25 @@ export default {
     async _getIntro() {
       const { data } = await getIntro(this.shopId)
       this.shopDesc = data.data.content
-      console.log(data)
+      data.data.imgFileList.map(v => {
+        v.url = this.imgHost + v.path + v.name
+      })
+      this.fileList = data.data.imgFileList
+    },
+    async uploadFile() { // 上传交互动画
+      const formData = new FormData()
+      formData.append('files', this.file)
+      const { data } = await addIntroImg(this.shopId, formData) // 这个接口没给上传返回
+      if (data.code === '10000') {
+        data.data.map(v => {
+          this.fileList.push({
+            id: v.id,
+            name: v.name,
+            url: this.imgHost + v.path + v.name
+          })
+        })
+      }
     }
-
   }
 }
 </script>
