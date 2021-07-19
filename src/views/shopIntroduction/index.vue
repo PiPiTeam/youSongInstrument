@@ -12,74 +12,39 @@
     >
       <i class="el-icon-plus" />
     </el-upload>
-    <h3>店铺图片展示</h3>
+    <h3>本店介绍</h3>
     <div>
-      <el-input v-model="shopDesc" type="textarea" placeholder="请输入店铺介绍" />
+      <el-input v-model="shopDesc" :rows="3" type="textarea" placeholder="请输入店铺介绍" />
     </div>
-    <el-row type="flex" justify="space-between">
-      <h3>名师风采</h3>
-      <span>
-        <el-button class="mt-13" @click="addTearcher">新增</el-button>
-      </span>
-    </el-row>
-    <div>
-      <el-row v-for="(item, index) of tearcher.tearcherList" :key="index" type="flex">
-        <el-form :ref="'tearchForm'+index" v-model="tearcher.tearcherList[index]" label-position="left" label-width="120px" style="width:90%;">
-          <el-form-item :label="'老师'+(index+1)+'姓名'">
-            <el-input v-model="item.name" placeholder="请输入" />
-          </el-form-item>
-          <el-form-item :label="'老师'+(index+1)+'介绍'">
-            <el-input v-model="item.desc" type="textarea" placeholder="请输入" />
-          </el-form-item>
-          <el-form-item :label="'老师'+(index+1)+'图片'">
-            <el-upload
-              action="/"
-              list-type="picture-card"
-              :auto-upload="false"
-              :on-preview="handlePictureCardPreview"
-              :file-list="item.fileList"
-            >
-              <i class="el-icon-plus" />
-            </el-upload>
-          </el-form-item>
-        </el-form>
-        <div style="width:10%;">
-          <el-button type="danger" icon="el-icon-delete" class="f-r" :disabled="tearcher.tearcherList.length <= 1" @click="deleteTearcher(index)" />
-        </div>
-      </el-row>
-    </div>
-    <el-row type="flex" justify="center">
-      <el-button type="primary">保存</el-button>
+    <el-row type="flex" justify="center" style="margin-top:10px;">
+      <el-button type="primary" @click="_setIntro">保存本店介绍</el-button>
     </el-row>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
+      <img width="100%" :src="dialogImageUrl" alt="店铺图片">
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { getShopId } from '@/utils/auth'
+import { getIntro, setIntro } from '@/api/shop'
 export default {
   name: 'ShopIntroduction',
   data() {
     return {
+      shopId: getShopId() || '',
+      imgHost: process.env.VUE_APP_IMAGE_HOST,
       dialogVisible: false,
       dialogImageUrl: '',
       fileList: [],
-      shopDesc: '',
-      tearcher: {
-        tearcherList: [{
-          name: '',
-          desc: '',
-          fileList: []
-        }]
-      }
+      shopDesc: ''
     }
   },
   computed: {
 
   },
   mounted() {
-
+    this._getIntro()
   },
   methods: {
     handlePictureCardPreview(file) {
@@ -89,17 +54,25 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },
-    handleChange() {},
-    addTearcher() {
-      this.tearcher.tearcherList.push({
-        name: '',
-        desc: '',
-        fileList: []
-      })
+    handleChange() {
+
     },
-    deleteTearcher(index) {
-      this.tearcher.tearcherList.splice(index, 1)
+    async _setIntro() {
+      if (this.shopDesc) {
+        const { data } = await setIntro(this.shopId, { content: this.shopDesc })
+        if (data.code === '10000') {
+          this.$message.success('操作成功')
+        }
+      } else {
+        this.$message.warning('请输入本店介绍')
+      }
+    },
+    async _getIntro() {
+      const { data } = await getIntro(this.shopId)
+      this.shopDesc = data.data.content
+      console.log(data)
     }
+
   }
 }
 </script>
