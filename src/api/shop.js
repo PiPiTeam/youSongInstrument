@@ -279,3 +279,72 @@ export function deleteTeacher(params) {
     params
   })
 }
+// 添加名师图片
+export function addTeacherImg(id, data) {
+  return request({
+    url: `/style/teacher/${id}/image`,
+    method: 'post',
+    data
+  })
+}
+
+// 删除名师图片
+export function deleteTeacherImg(id, data) {
+  return request({
+    url: `/style/teacher/${id}/image`,
+    method: 'delete',
+    data
+  })
+}
+
+// 名师列表
+export function getStudentList(params) {
+  return request({
+    url: `/style/student/list`,
+    method: 'get',
+    params
+  })
+}
+
+// 新增名师
+export function addStudent(data) {
+  return request({
+    url: `/style/student`,
+    method: 'post',
+    data
+  })
+}
+// 编辑名师
+export function updataStudent(data) {
+  return request({
+    url: `/style/student`,
+    method: 'put',
+    data
+  })
+}
+// 删除名师
+export function deleteStudent(params) {
+  return request({
+    url: `/style/student`,
+    method: 'delete',
+    params
+  })
+}
+// 添加名师图片
+export function addStudentImg(id, data) {
+  return request({
+    url: `/style/student/${id}/image`,
+    method: 'post',
+    data
+  })
+}
+
+// 删除名师图片
+export function deleteStudentImg(id, data) {
+  return request({
+    url: `/style/student/${id}/image`,
+    method: 'delete',
+    data
+  })
+}
+

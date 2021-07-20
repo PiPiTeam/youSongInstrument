@@ -15,7 +15,40 @@
           <el-form-item :label="'老师'+(index+1)+'介绍'">
             <el-input v-model="item.content" type="textarea" placeholder="请输入" />
           </el-form-item>
-          <el-form-item :label="'老师'+(index+1)+'图片'">
+          <el-form-item v-if="item.id" :label="'老师'+(index+1)+'图片'" prop="imgFiles">
+            <div>
+              <ul class="el-upload-list el-upload-list--picture-card f-l">
+                <li v-for="_file in item.imgFiles" :key="_file.id" class="el-upload-list__item is-ready ">
+                  <div>
+                    <img :src="_file.url" alt="" class="el-upload-list__item-thumbnail">
+                    <span class="el-upload-list__item-actions">
+                      <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(_file)">
+                        <i class="el-icon-zoom-in" />
+                      </span>
+                      <span class="el-upload-list__item-delete" @click="handleRemove(_file, item.id, index)">
+                        <i class="el-icon-delete" />
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+              <el-upload
+                class="f-l"
+                action="/"
+                :limit="5"
+                :show-file-list="false"
+                :auto-upload="true"
+                :http-request="uploadFile"
+                :on-change="(file, fileList) => {handleChangeUpdata(file, fileList, item, index)}"
+              >
+                <div v-show="item.imgFiles.length < 5" slot="default" class="el-upload el-upload--picture-card">
+                  <i class="el-icon-plus" />
+                  <input type="file" name="file" class="el-upload__input">
+                </div>
+              </el-upload>
+            </div>
+          </el-form-item>
+          <el-form-item v-else :label="'老师'+(index+1)+'图片'">
             <el-upload
               action="/"
               list-type="picture-card"
@@ -43,7 +76,7 @@
 
 <script>
 import { getShopId } from '@/utils/auth'
-import { getTearchList, addTeacher, deleteTeacher, updataTeacher } from '@/api/shop'
+import { getTearchList, addTeacher, deleteTeacher, updataTeacher, addTeacherImg, deleteTeacherImg } from '@/api/shop'
 export default {
   name: 'TearchElegantDemeanor',
   data() {
@@ -58,6 +91,11 @@ export default {
           content: '',
           imgFiles: []
         }]
+      },
+      uploadData: {
+        index: 0,
+        id: '',
+        file: ''
       }
     }
   },
@@ -114,6 +152,11 @@ export default {
         this._addTeacher(formData, index)
       }
     },
+    handleChangeUpdata(file, fileList, item, index) {
+      this.uploadData.file = file.raw
+      this.uploadData.id = item.id
+      this.uploadData.index = index
+    },
     async _addTeacher(dataForm, index) {
       const { data } = await addTeacher(dataForm)
       console.log(data)
@@ -143,8 +186,39 @@ export default {
       }
       this.tearcher.tearcherList = data.data
       console.log(this.tearcher.tearcherList)
+    },
+    async uploadFile() {
+      const formData = new FormData()
+      formData.append('files', this.uploadData.file)
+      const { data } = await addTeacherImg(this.uploadData.id, formData)
+      if (data.code === '10000') {
+        const index = this.uploadData.index
+        const item = this.tearcher.tearcherList[index]
+        data.data.map(v => {
+          item.imgFiles.push({
+            id: v.id,
+            name: v.name,
+            url: this.imgHost + v.path + v.name
+          })
+        })
+        this.$set(this.tearcher.tearcherList, index, item)
+      }
+    },
+    async handleRemove(file, id, index) {
+      const formData = new FormData()
+      formData.append('fileIds', file.id)
+      const { data } = await deleteTeacherImg(id, formData)
+      if (data.code === '10000') {
+        const item = this.tearcher.tearcherList[index]
+        for (const i in item.imgFiles) {
+          if (item.imgFiles[i].id === file.id) {
+            item.imgFiles.splice(i, 1)
+            break
+          }
+        }
+        this.$set(this.tearcher.tearcherList, index, item)
+      }
     }
-
   }
 }
 </script>
