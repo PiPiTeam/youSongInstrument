@@ -59,22 +59,33 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="name"
+          prop="nickname"
           label="用户名称"
         />
         <el-table-column
-          prop="phone"
+          prop="mobile"
           label="联系方式"
         />
         <el-table-column
-          prop="date"
+          prop="updateTime"
           label="操作时间"
         />
         <el-table-column
-          prop="address"
+          prop="status"
           label="预约状态"
-        />
+        >
+          <template slot-scope="scope">{{ scope.row.status == 1 ? '预约' : '想了解' }}</template>
+        </el-table-column>
       </el-table>
+      <div class="paging">
+        <pagination
+          v-if="followPage.total > 0"
+          :total="followPage.total"
+          :page.sync="followPage.current"
+          :limit.sync="followPage.size"
+          @pagination="_getActivityFollowPageList"
+        />
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -175,9 +186,9 @@ export default {
       pager && Object.assign(this.followPages, pager)
       const { data } = await getActivityFollowPageList(Object.assign(this.followPages, { activityId: this.activityId }))
       console.log(data)
-      // this.tableData = data.data.records
-      // this.pager.current = data.data.current
-      // this.pager.total = data.data.total
+      this.detailDialog.tableData = data.data.records
+      this.followPage.current = data.data.current
+      this.followPage.total = data.data.total
     }
   }
 }

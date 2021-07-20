@@ -139,15 +139,6 @@ export function getActivityFollowPageList(params) {
   })
 }
 
-// 产品分页
-export function getProductPageList(params) {
-  return request({
-    url: `/product/page-list`,
-    method: 'get',
-    params
-  })
-}
-
 // 课程列表
 export function getCoursePageList(params) {
   return request({
@@ -190,5 +181,101 @@ export function deleteCourseImg(id, data) {
     url: `/course/${id}/image`,
     method: 'delete',
     data
+  })
+}
+
+// 产品分页
+export function getProductPageList(params) {
+  return request({
+    url: `/product/page-list`,
+    method: 'get',
+    params
+  })
+}
+
+// 分页查询对产品感兴趣
+export function getProductFollowerPage(params) {
+  return request({
+    url: `/product/follower/page-list`,
+    method: 'get',
+    params
+  })
+}
+
+// 新增产品
+export function addProduct(data) {
+  return request({
+    url: `/product`,
+    method: 'post',
+    data
+  })
+}
+
+// 修改产品
+export function updataProduct(data) {
+  return request({
+    url: `/product`,
+    method: 'put',
+    data
+  })
+}
+
+// 获取产品详情
+export function getProductById(id) {
+  return request({
+    url: `/product/${id}`,
+    method: 'get'
+  })
+}
+
+// 添加产品图片
+export function addProductImg(id, data) {
+  return request({
+    url: `/product/${id}/image`,
+    method: 'post',
+    data
+  })
+}
+
+// 删除产品图片
+export function deleteProductImg(id, data) {
+  return request({
+    url: `/product/${id}/image`,
+    method: 'delete',
+    data
+  })
+}
+
+// 名师列表
+export function getTearchList(params) {
+  return request({
+    url: `/style/teacher/list`,
+    method: 'get',
+    params
+  })
+}
+
+// 新增名师
+export function addTeacher(data) {
+  return request({
+    url: `/style/teacher`,
+    method: 'post',
+    data
+  })
+}
+// 编辑名师
+export function updataTeacher(data) {
+  return request({
+    url: `/style/teacher`,
+    method: 'put',
+    data
+  })
+}
+// 删除名师
+export function deleteTeacher(params) {
+  return request({
+    url: `/style/teacher`,
+    method: 'delete',
+    params
   })
 }
