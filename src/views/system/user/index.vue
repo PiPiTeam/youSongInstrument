@@ -51,7 +51,7 @@
       <el-table-column prop="createTime" label="入驻时间" />
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.auditStatus === 2" size="mini" @click="showReview(scope.row.id)">审核</el-button>
+          <el-button v-show="scope.row.auditStatus !== 1" size="mini" @click="showReview(scope.row.id)">审核</el-button>
           <el-button v-if="scope.row.enableStatus === 1" size="mini" type="danger" @click="_changeEnableStatus(2, scope.row.id)">关闭服务</el-button>
           <el-button v-else size="mini" @click="_changeEnableStatus(1, scope.row.id)">开启服务</el-button>
         </template>
