@@ -28,6 +28,12 @@
           <i class="el-icon-plus" />
         </el-upload>
       </el-form-item>
+      <el-form-item label="App Id" prop="appId">
+        <el-input v-model="dataForm.appId" placeholder="请输入App Id" />
+      </el-form-item>
+      <el-form-item label="App Secret" prop="appSecret">
+        <el-input v-model="dataForm.appSecret" type="textarea" placeholder="请输入App Secret" />
+      </el-form-item>
     </el-form>
     <el-row type="flex" justify="center">
       <el-button type="primary" @click="submit">保存</el-button>
@@ -55,6 +61,8 @@ export default {
         address: '',
         phone: '',
         wechat: '',
+        appId: '',
+        appSecret: '',
         picList: []
       },
       isEdit: false,
@@ -74,6 +82,12 @@ export default {
         ],
         picList: [
           { required: true, message: '请上传Logo', trigger: 'change' }
+        ],
+        appId: [
+          { required: true, message: '请输入App Id', trigger: 'blur' }
+        ],
+        appSecret: [
+          { required: true, message: '请输入App Secret', trigger: 'blur' }
         ]
       }
     }
@@ -96,7 +110,9 @@ export default {
         formData.append('name', this.dataForm.name)
         formData.append('address', this.dataForm.address)
         formData.append('phone', this.dataForm.phone)
-        formData.append('wechat', this.dataForm.wechat)
+        formData.append('address', this.dataForm.address)
+        formData.append('appId', this.dataForm.appId)
+        formData.append('appSecret', this.dataForm.appSecret)
         if (this.dataForm.picList.length && this.dataForm.picList[0].raw) {
           formData.append('logoFile', this.dataForm.picList[0].raw)
         }
