@@ -3,7 +3,7 @@
     <el-header>
       <el-card class="box-card">
         <div class="imgBox">
-          <h1 class="title" @click="$router.push('/login')">后台模板</h1>
+          <h1 class="title" @click="$router.push('/login')">优颂乐器</h1>
           <span class="rightBox">已有账户, <span class="fontColor" @click="linkTo()">立即登录</span></span>
         </div>
       </el-card>

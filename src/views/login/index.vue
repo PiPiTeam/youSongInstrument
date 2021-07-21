@@ -6,7 +6,7 @@ s<template>
     <div class="right-container">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <h3 class="title">后台模板</h3>
+          <h3 class="title">优颂乐器</h3>
         </div>
         <el-form-item prop="email" class="user-name">
           <span class="svg-container">
