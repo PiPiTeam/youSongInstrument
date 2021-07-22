@@ -2,10 +2,10 @@
   <el-container class="boxRegistered">
     <el-header>
       <el-card class="box-card">
-        <div class="imgBox">
-          <img src="../../assets/images/Mdregistered.png" alt="" @click="$router.push('/login')">
+        <el-row class="imgBox" type="flex" justify="space-between" align="middle">
+          <h2 @click="$router.push('/login')">优颂乐器</h2>
           <span class="rightBox">已有账户, <span class="fontColor" @click="linkTo()">立即登录</span></span>
-        </div>
+        </el-row>
       </el-card>
     </el-header>
     <el-main class="main">
@@ -24,7 +24,7 @@
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="ruleForm.email" placeholder="请输入您的邮箱" style="width: 40%;" />
             <!-- <el-button type="primary" style="margin-left: 6px;background:#FF5338 ;border:none;"  @click="handleSendVerificationCode()">获取验证码</el-button> -->
-            <input v-model="codeMsg" type="button" class="getNumber" :disabled="codeDisabled" style="width: 20%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;" @click="getCode">
+            <input v-model="codeMsg" type="button" class="getNumber" :disabled="codeDisabled" style="width: 22%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;" @click="getCode">
           </el-form-item>
           <el-form-item label="验证码" prop="emailVerificationCode">
             <el-input v-model="ruleForm.emailVerificationCode" placeholder="请输入您的验证码" />
@@ -71,7 +71,7 @@ export default {
       // 是否禁用按钮
       codeDisabled: false,
       // 倒计时秒数
-      countdown: 120,
+      countdown: 60,
       // 按钮上的文字
       codeMsg: '获取验证码',
       // 定时器
@@ -137,14 +137,14 @@ export default {
       // 验证码60秒倒计时
       if (!this.timer) {
         this.timer = setInterval(() => {
-          if (this.countdown > 0 && this.countdown <= 120) {
+          if (this.countdown > 0 && this.countdown <= 60) {
             this.countdown--
             if (this.countdown !== 0 && this.ruleForm.email) {
               this.codeMsg = '重新发送(' + this.countdown + ')'
             } else {
               clearInterval(this.timer)
               this.codeMsg = '获取验证码'
-              this.countdown = 120
+              this.countdown = 60
               this.timer = null
               this.codeDisabled = false
             }
@@ -162,9 +162,10 @@ export default {
     },
     // 获取验证码
     async handleSendVerificationCode() {
-      const formdata = new FormData()
-      formdata.append('subject', '系统用户密码重置')
-      formdata.append('targetEmailAddress', this.ruleForm.email)
+      const formdata = {
+        receiveEmail: this.ruleForm.email,
+        type: 'reset'
+      }
 
       await getSendVerificationCode(formdata).then(res => {
 
@@ -186,12 +187,13 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const formdata = new FormData()
-          formdata.append('newPassword', this.$md5(this.ruleForm.confirmPassword))
-          formdata.append('targetEmailAddress', this.ruleForm.email)
-          formdata.append('code', this.ruleForm.emailVerificationCode)
+          const formdata = {
+            email: this.ruleForm.email,
+            password: this.ruleForm.password,
+            passwordCopy: this.ruleForm.confirmPassword,
+            verificationCode: this.ruleForm.emailVerificationCode
+          }
           getResetPassword(formdata).then(res => {
-            console.log(res, 'ddd77')
             if (res.data.code === '10000') {
               this.$message({
                 message: '重置密码成功',
@@ -245,7 +247,7 @@ export default {
       .imgBox{
 
           width: 80%;
-          margin: 10px auto;
+          margin: 0 auto;
 
           img {
               width: 290px;

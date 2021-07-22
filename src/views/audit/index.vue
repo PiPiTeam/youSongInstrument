@@ -1,36 +1,14 @@
 <template>
-  <el-container class="boxRegistered">
-    <el-header>
-      <el-card class="box-card">
-        <div class="imgBox">
-          <h1 class="title" @click="$router.push('/login')">优颂乐器</h1>
-          <span class="rightBox">已有账户, <span class="fontColor" @click="linkTo()">立即登录</span></span>
-        </div>
-      </el-card>
-    </el-header>
+  <div class="audit-container">
     <el-main class="main">
       <div class="main_container">
-        <h3 class="fontStyle">申请入驻</h3>
+        <h3 class="fontStyle">入驻审核状态： {{ auditTxt(auditStatus) }}</h3>
         <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="nickName">
             <el-input v-model.number="ruleForm.nickName" placeholder="请输入您的用户名" />
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
             <el-input v-model.number="ruleForm.mobile" placeholder="请输入您的手机号码" />
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="ruleForm.password" type="password" placeholder="请输入您的密码" show-password />
-          </el-form-item>
-          <el-form-item label="确认密码" prop="passwordCopy">
-            <el-input v-model="ruleForm.passwordCopy" type="password" placeholder="请再次输入您的密码" show-password />
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="ruleForm.email" placeholder="请输入您的邮箱" style="width: 40%;" />
-            <!-- <el-button type="primary" style="margin-left: 6px;background:#FF5338 ;border:none;"  @click="handleSendVerificationCode()">获取验证码</el-button> -->
-            <input v-model="codeMsg" type="button" class="getNumber" :disabled="codeDisabled" style="width: 22%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;" @click="getCode">
-          </el-form-item>
-          <el-form-item label="验证码" prop="verificationCode">
-            <el-input v-model="ruleForm.verificationCode" placeholder="请输入您的验证码" />
           </el-form-item>
           <el-form-item label="所在城市" prop="selectedOptions">
             <el-cascader
@@ -64,6 +42,7 @@
               ref="form"
               class="upload-demo"
               action="#"
+              :file-list="ruleForm.fileListShow"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :before-remove="beforeRemove"
@@ -87,7 +66,7 @@
             />
           </el-form-item> -->
           <el-form-item>
-            <el-button type="primary" style="width:100%;margin:30px 0;background:#FF5338 ;border:none;" @click="submitForm('ruleForm')">注册</el-button>
+            <el-button type="primary" style="width:100%;margin:30px 0;background:#FF5338 ;border:none;" @click="submitForm('ruleForm')">修改注册信息</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -98,11 +77,11 @@
         :show-close="false"
       >
         <div v-if="!textHidden" class="dialogBox">
-          <img src="../../assets/images/sad.png" alt=""><span style="color: red;">注册失败</span>
+          <img src="../../assets/images/sad.png" alt=""><span style="color: red;">操作失败</span>
           <div class="dialogMT">该机构已注册，请联系管理员咨询</div>
         </div>
         <div v-if="textHidden" class="dialogBox">
-          <img src="../../assets/images/succeed.png" alt=""><span style="color: #1AD66C;">注册成功</span>
+          <img src="../../assets/images/succeed.png" alt=""><span style="color: #1AD66C;">操作成功</span>
           <div class="dialogMT">资料将在一个工作日完成审核，并以邮箱形式提示</div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -112,35 +91,16 @@
         </span>
       </el-dialog>
     </el-main>
-
-  </el-container>
+  </div>
 </template>
 
 <script>
 import { regionData } from 'element-china-area-data'
-import { getRegistered, getSendVerificationCode } from '@/api/login'
+import { updataRegistered } from '@/api/login'
+import { getUserById } from '@/api/user'
 
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        if (this.ruleForm.passwordCopy !== '') {
-          this.$refs.ruleForm.validateField('passwordCopy')
-        }
-        callback()
-      }
-    }
-    var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
-      }
-    }
     var checkPhone = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('手机号不能为空'))
@@ -183,6 +143,9 @@ export default {
     }
 
     return {
+      userId: localStorage.getItem('youSongUserId'),
+      imgHost: process.env.VUE_APP_IMAGE_HOST,
+      auditStatus: '',
       // 是否禁用按钮
       codeDisabled: false,
       // 倒计时秒数
@@ -195,13 +158,10 @@ export default {
       ruleForm: {
         nickName: '',
         mobile: '',
-        password: '',
-        passwordCopy: '',
-        email: '',
-        verificationCode: '',
         institutionName: '',
         fileList: null,
-        selectedOptions: []
+        selectedOptions: [],
+        fileListShow: []
       },
       rules: {
         nickName: [
@@ -210,12 +170,6 @@ export default {
         mobile: [
           { required: true, validator: checkPhone, trigger: 'blur' },
           { type: 'number', message: '手机号必须为数字值' }
-        ],
-        password: [
-          { validator: validatePass, required: true, trigger: 'blur' }
-        ],
-        passwordCopy: [
-          { validator: validatePass2, required: true, trigger: 'blur' }
         ],
         institutionName: [
           { required: true, message: '请输入机构名称', trigger: 'change' }
@@ -242,16 +196,6 @@ export default {
           { validator: validlegalbizLicNum, trigger: 'blur' }
 
         ],
-        email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-        ],
-        verificationCode: [
-          { required: true, message: '请输入邮箱验证码', trigger: 'change' }
-        ],
-        //   InstitutionAddress: [
-        //     { type: 'array',  required: true, message: '请填写机构地址', trigger: 'blur' }
-        //   ],
         fileList: [
           { required: true, message: '请上传机构营业执照', trigger: 'change' }
         ],
@@ -273,54 +217,38 @@ export default {
       regionOptions: regionData
     }
   },
+  mounted() {
+    this._getUserById(this.userId)
+  },
   methods: {
+    async _getUserById(id) {
+      const { data } = await getUserById(id)
+      this.ruleForm.nickName = data.data.nickName
+      this.ruleForm.mobile = +data.data.mobile
+      this.ruleForm.institutionName = data.data.institutionName
+      this.ruleForm.selectedOptions = [data.data.province, data.data.city, data.data.district]
+      this.ruleForm.fileList = data.data.license
+      this.ruleForm.fileListShow = [{
+        id: '',
+        name: data.data.license,
+        url: this.imgHost + data.data.license
+      }]
+      this.auditStatus = data.data.auditStatus
+      console.log(this.ruleForm)
+    },
+    auditTxt(audit) {
+      let auditStatusTxt = ''
+      if (audit === 1) {
+        auditStatusTxt = '通过'
+      } else if (audit === 2) {
+        auditStatusTxt = '待审核'
+      } else {
+        auditStatusTxt = '已驳回'
+      }
+      return auditStatusTxt
+    },
     handleChange(value) {
       console.log(value)
-    },
-    getCode() {
-      // 验证码60秒倒计时
-      if (!this.timer) {
-        this.timer = setInterval(() => {
-          if (this.countdown > 0 && this.countdown <= 60) {
-            this.countdown--
-            if (this.countdown !== 0 && this.ruleForm.email) {
-              this.codeMsg = '重新发送(' + this.countdown + 's )'
-            } else {
-              clearInterval(this.timer)
-              this.codeMsg = '获取验证码'
-              this.countdown = 60
-              this.timer = null
-              this.codeDisabled = false
-            }
-          }
-        }, 1000)
-      }
-      if (this.codeMsg === '获取验证码' && this.ruleForm.email) {
-        this.handleSendVerificationCode()
-      } else if (this.ruleForm.email === '') {
-        this.$message({
-          message: '请输入邮箱',
-          type: 'warning'
-        })
-      }
-    },
-    // 获取验证码
-    async handleSendVerificationCode() {
-      const formdata = {
-        receiveEmail: this.ruleForm.email,
-        type: 'register'
-      }
-      await getSendVerificationCode(formdata).then(res => {
-        console.log(res)
-      }).catch(error => {
-        if (this.ruleForm.email === '') {
-          this.$message({
-            message: '请输入邮箱',
-            type: 'warning'
-          })
-        }
-        this.$message.error(error)
-      })
     },
     dialogVisibleSucced() {
       this.dialogVisible = false
@@ -377,15 +305,9 @@ export default {
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm.fileList, 'licenseFile')
+          formdata.append('id', this.userId)
           formdata.append('mobile', this.ruleForm.mobile)
-          // formdata.append('orgCode', this.ruleForm.institutionCode)
-          formdata.append('licenseFile', this.ruleForm.fileList)
           formdata.append('institutionName', this.ruleForm.institutionName)
-          formdata.append('password', this.ruleForm.password)
-          formdata.append('passwordCopy', this.ruleForm.passwordCopy)
-          formdata.append('email', this.ruleForm.email)
-          formdata.append('verificationCode', this.ruleForm.verificationCode)
           formdata.append('nickName', this.ruleForm.nickName)
           // 省市区
           const province = this.ruleForm.selectedOptions[0]
@@ -394,7 +316,12 @@ export default {
           formdata.append('province', province)
           formdata.append('city', city)
           formdata.append('district', district)
-          getRegistered(formdata).then(res => {
+          // 文件
+          if ((typeof this.ruleForm.fileList !== 'string') && this.ruleForm.fileList) {
+            formdata.append('licenseFile', this.ruleForm.fileList)
+          }
+          console.log(formdata)
+          updataRegistered(formdata).then(res => {
             console.log(res, 'ddd')
             if (res.data.code === '10000') { // 成功
               this.dialogVisible = true
@@ -478,23 +405,23 @@ export default {
 
 </style>
 <style >
- .boxRegistered .el-header{
+ .audit-container .el-header{
       padding: 0;
   }
-  .boxRegistered .el-card__body{
+  .audit-container .el-card__body{
         padding: 0;
   }
-  .boxRegistered .el-radio__input.is-checked+.el-radio__label{
+  .audit-container .el-radio__input.is-checked+.el-radio__label{
       color: #FF5338;
   }
- .boxRegistered .el-radio__input.is-checked .el-radio__inner{
+ .audit-container .el-radio__input.is-checked .el-radio__inner{
      border-color: #FF5338;
     background: #FF5338;
   }
- .boxRegistered .el-radio__inner:hover{
+ .audit-container .el-radio__inner:hover{
       border: 1px solid #FF5338;
   }
-  .boxRegistered .el-cascader {
+  .audit-container .el-cascader {
       width: 100%;
   }
 </style>

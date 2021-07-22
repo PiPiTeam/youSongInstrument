@@ -62,8 +62,16 @@ export function getSendVerificationCode(data) {
 // 重置密码
 export function getResetPassword(data) {
   return request({
-    url: '/sysUser/resetPassword',
-    method: 'post',
+    url: '/user/reset/password',
+    method: 'put',
+    data
+  })
+}
+// 更改入驻
+export function updataRegistered(data) {
+  return request({
+    url: '/user',
+    method: 'put',
     data
   })
 }

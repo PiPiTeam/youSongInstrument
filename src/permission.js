@@ -35,6 +35,7 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('updataPermissions', data.data)
           next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
         } catch (error) {
+          console.log(error)
           Message({
             message: error || 'Error',
             dangerouslyUseHTMLString: true,

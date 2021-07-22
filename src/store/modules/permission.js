@@ -41,10 +41,13 @@ const permission = {
     createRoutes({ commit }, routes) {
       return new Promise(resolve => {
         const accessedRoutes = recursionRoutesMap(routes)
-        if (routes[0].url !== '/') {
-          accessedRoutes.push({ path: '/', redirect: '/' + routes[0].childMenu[0].component, hidden: true })
-        } else if (routes[0].url === '/' && routes[0].childMenu[0].url === 'list') {
-          accessedRoutes.push({ path: '/', redirect: '/list', hidden: true })
+        // if (routes[0].url !== '/') {
+        //   accessedRoutes.push({ path: '/', redirect: '/' + routes[0].childMenu[0].component, hidden: true })
+        // } else if (routes[0].url === '/' && routes[0].childMenu[0].url === 'list') {
+        //   accessedRoutes.push({ path: '/', redirect: '/list', hidden: true })
+        // }
+        if (routes[0].code === 'audit') {
+          accessedRoutes.push({ path: '/', redirect: routes[0].url, hidden: true })
         }
         accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', accessedRoutes)
@@ -56,6 +59,7 @@ const permission = {
 
 export function recursionRoutesMap(routes) {
   const res = []
+  console.log(routes)
   routes.forEach((route, index) => {
     const tmp = { ...route }
     //* menuType: 0 目录 1 页面 2 按钮
@@ -75,7 +79,9 @@ export function recursionRoutesMap(routes) {
       } else if (tmp.component === 'NullRouterView') {
         tmp.component = NullRouterView
       } else {
+        console.log(loadView(tmp.component))
         tmp.component = loadView(tmp.component)
+        console.log(tmp.component)
       }
     }
     // 转换数据
