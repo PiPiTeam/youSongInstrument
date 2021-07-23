@@ -1,14 +1,40 @@
 <template>
-  <div class="audit-container">
+  <el-container class="audit-container">
+    <el-header>
+      <el-card class="box-card">
+        <el-row
+          class="imgBox"
+          type="flex"
+          justify="space-between"
+          align="middle"
+        >
+          <h1 @click="$router.push('/login')">优颂乐器</h1>
+          <span class="rightBox">
+            <span class="fontColor" @click="logoutUser">重新登录</span></span>
+        </el-row>
+      </el-card>
+    </el-header>
     <el-main class="main">
       <div class="main_container">
         <h3 class="fontStyle">入驻审核状态： {{ auditTxt(auditStatus) }}</h3>
-        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          label-width="120px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="用户名" prop="nickName">
-            <el-input v-model.number="ruleForm.nickName" placeholder="请输入您的用户名" />
+            <el-input
+              v-model.number="ruleForm.nickName"
+              placeholder="请输入您的用户名"
+            />
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
-            <el-input v-model.number="ruleForm.mobile" placeholder="请输入您的手机号码" />
+            <el-input
+              v-model.number="ruleForm.mobile"
+              placeholder="请输入您的手机号码"
+            />
           </el-form-item>
           <el-form-item label="所在城市" prop="selectedOptions">
             <el-cascader
@@ -19,7 +45,10 @@
             />
           </el-form-item>
           <el-form-item label="机构名称" prop="institutionName">
-            <el-input v-model="ruleForm.institutionName" placeholder="请输入机构名称(工商注册名称)" />
+            <el-input
+              v-model="ruleForm.institutionName"
+              placeholder="请输入机构名称(工商注册名称)"
+            />
           </el-form-item>
 
           <!-- <el-form-item label="机构代码" prop="institutionCode">
@@ -37,7 +66,6 @@
 
                     </el-form-item> -->
           <el-form-item label="机构营业执照" prop="fileList">
-
             <el-upload
               ref="form"
               class="upload-demo"
@@ -54,7 +82,11 @@
               list-type="picture"
               :auto-upload="false"
             >
-              <el-button size="small" type="primary" style="width: 160px;background:#FF5338 ;border:none;">选择文件</el-button>
+              <el-button
+                size="small"
+                type="primary"
+                style="width: 160px;background:#FF5338 ;border:none;"
+              >选择文件</el-button>
             </el-upload>
           </el-form-item>
           <!-- <el-form-item label="机构简介" prop="desc">
@@ -66,7 +98,11 @@
             />
           </el-form-item> -->
           <el-form-item>
-            <el-button type="primary" style="width:100%;margin:30px 0;background:#FF5338 ;border:none;" @click="submitForm('ruleForm')">修改注册信息</el-button>
+            <el-button
+              type="primary"
+              style="width:100%;margin:30px 0;background:#FF5338 ;border:none;"
+              @click="submitForm('ruleForm')"
+            >修改注册信息</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -77,21 +113,37 @@
         :show-close="false"
       >
         <div v-if="!textHidden" class="dialogBox">
-          <img src="../../assets/images/sad.png" alt=""><span style="color: red;">操作失败</span>
+          <img src="../../assets/images/sad.png" alt=""><span
+            style="color: red;"
+          >操作失败</span>
           <div class="dialogMT">该机构已注册，请联系管理员咨询</div>
         </div>
         <div v-if="textHidden" class="dialogBox">
-          <img src="../../assets/images/succeed.png" alt=""><span style="color: #1AD66C;">操作成功</span>
-          <div class="dialogMT">资料将在一个工作日完成审核，并以邮箱形式提示</div>
+          <img src="../../assets/images/succeed.png" alt=""><span
+            style="color: #1AD66C;"
+          >操作成功</span>
+          <div class="dialogMT">
+            资料将在一个工作日完成审核，并以邮箱形式提示
+          </div>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button v-if="textHidden" type="primary" style="margin:30px 0;background:#FF5338 ;border:none;" @click="dialogVisibleSucced()">确 认</el-button>
-          <el-button v-if="!textHidden" type="primary" style="margin:30px 0;background:#FF5338 ;border:none;" @click="dialogVisible = false">确 认</el-button>
+          <el-button
+            v-if="textHidden"
+            type="primary"
+            style="margin:30px 0;background:#FF5338 ;border:none;"
+            @click="dialogVisibleSucced()"
+          >确 认</el-button>
+          <el-button
+            v-if="!textHidden"
+            type="primary"
+            style="margin:30px 0;background:#FF5338 ;border:none;"
+            @click="dialogVisible = false"
+          >确 认</el-button>
           <el-button plain @click="dialogVisible = false">取 消</el-button>
         </span>
       </el-dialog>
     </el-main>
-  </div>
+  </el-container>
 </template>
 
 <script>
@@ -115,10 +167,28 @@ export default {
       }
     }
     const validlegalbizLicNum = (rule, value, callback) => {
-      let Ancode// 统一社会信用代码的每一个值
-      let Ancodevalue// 统一社会信用代码每一个值的权重
+      let Ancode // 统一社会信用代码的每一个值
+      let Ancodevalue // 统一社会信用代码每一个值的权重
       let total = 0
-      const weightedfactors = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28]// 加权因子
+      const weightedfactors = [
+        1,
+        3,
+        9,
+        27,
+        19,
+        26,
+        16,
+        17,
+        20,
+        29,
+        25,
+        13,
+        8,
+        24,
+        10,
+        30,
+        28
+      ] // 加权因子
       // 不用I、O、S、V、Z
       const str = '0123456789ABCDEFGHJKLMNPQRTUWXY'
       for (let i = 0; i < value.length - 1; i++) {
@@ -127,11 +197,12 @@ export default {
         total = total + Ancodevalue * weightedfactors[i]
         // 权重与加权因子相乘之和
       }
-      let logiccheckcode = 31 - total % 31
+      let logiccheckcode = 31 - (total % 31)
       if (logiccheckcode === 31) {
         logiccheckcode = 0
       }
-      const Str = '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,T,U,W,X,Y'
+      const Str =
+        '0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,T,U,W,X,Y'
       const Array_Str = Str.split(',')
       logiccheckcode = Array_Str[logiccheckcode]
 
@@ -175,9 +246,17 @@ export default {
           { required: true, message: '请输入机构名称', trigger: 'change' }
         ],
         institutionCode: [
-          { required: true, message: '请输入社会统一信用代码', trigger: 'blur' },
           {
-            type: 'string', len: 18, message: '输入有误，统一社会信用代码长度需为18位', trigger: 'change' },
+            required: true,
+            message: '请输入社会统一信用代码',
+            trigger: 'blur'
+          },
+          {
+            type: 'string',
+            len: 18,
+            message: '输入有误，统一社会信用代码长度需为18位',
+            trigger: 'change'
+          },
           {
             type: 'string',
             /*
@@ -194,7 +273,6 @@ export default {
             trigger: 'blur'
           },
           { validator: validlegalbizLicNum, trigger: 'blur' }
-
         ],
         fileList: [
           { required: true, message: '请上传机构营业执照', trigger: 'change' }
@@ -226,13 +304,19 @@ export default {
       this.ruleForm.nickName = data.data.nickName
       this.ruleForm.mobile = +data.data.mobile
       this.ruleForm.institutionName = data.data.institutionName
-      this.ruleForm.selectedOptions = [data.data.province, data.data.city, data.data.district]
+      this.ruleForm.selectedOptions = [
+        data.data.province,
+        data.data.city,
+        data.data.district
+      ]
       this.ruleForm.fileList = data.data.license
-      this.ruleForm.fileListShow = [{
-        id: '',
-        name: data.data.license,
-        url: this.imgHost + data.data.license
-      }]
+      this.ruleForm.fileListShow = [
+        {
+          id: '',
+          name: data.data.license,
+          url: this.imgHost + data.data.license
+        }
+      ]
       this.auditStatus = data.data.auditStatus
       console.log(this.ruleForm)
     },
@@ -254,12 +338,11 @@ export default {
       this.dialogVisible = false
       this.$router.push('/login')
     },
-    handleHttpRequestRegistered() {
-
-    },
+    handleHttpRequestRegistered() {},
     onUploadChange(file, filelist) {
       console.log(file.raw, filelist)
-      const isIMAGE = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
+      const isIMAGE =
+        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // const isLt1M = file.size / 1024 / 1024 < 1
 
       if (!isIMAGE) {
@@ -291,19 +374,20 @@ export default {
       console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+      )
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
-    },
-    linkTo() {
-      this.$router.push('/login')
     },
     submitForm(formName) {
       console.log(this.ruleForm.fileList, '566')
       const formdata = new FormData()
 
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           formdata.append('id', this.userId)
           formdata.append('mobile', this.ruleForm.mobile)
@@ -317,22 +401,29 @@ export default {
           formdata.append('city', city)
           formdata.append('district', district)
           // 文件
-          if ((typeof this.ruleForm.fileList !== 'string') && this.ruleForm.fileList) {
+          if (
+            typeof this.ruleForm.fileList !== 'string' &&
+            this.ruleForm.fileList
+          ) {
             formdata.append('licenseFile', this.ruleForm.fileList)
           }
           console.log(formdata)
-          updataRegistered(formdata).then(res => {
-            console.log(res, 'ddd')
-            if (res.data.code === '10000') { // 成功
-              this.dialogVisible = true
-              this.textHidden = true
-            } else { // 异常
-              this.dialogVisible = true
-              this.textHidden = false
-            }
-          }).catch(error => {
-            this.$message.error(error)
-          })
+          updataRegistered(formdata)
+            .then(res => {
+              console.log(res, 'ddd')
+              if (res.data.code === '10000') {
+                // 成功
+                this.dialogVisible = true
+                this.textHidden = true
+              } else {
+                // 异常
+                this.dialogVisible = true
+                this.textHidden = false
+              }
+            })
+            .catch(error => {
+              this.$message.error(error)
+            })
         } else {
           this.$message({
             message: '请查看必填信息是否完善',
@@ -341,87 +432,96 @@ export default {
           return false
         }
       })
+    },
+    async logoutUser() {
+      await this.$store.dispatch('Logout')
+      this.$router.push(`/login`) // redirect=${this.$route.fullPath}
+      this.$store.dispatch('resetMapRouter')
+      this.$router.push('/login')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
- .boxRegistered{
+.audit-container {
+  width: 100%;
+  .box-card {
     width: 100%;
-    .box-card{
-      width: 100%;
-      padding: 0;
-      .rightBox{
-       display: inline-block;
-       float: right;
-       margin-top: 10px;
-       .fontColor{
-           color: #FF5338;
-           text-decoration: underline;
-       }
-       .fontColor:hover {
-           cursor: pointer;
-       }
+    padding: 0;
+    .rightBox {
+      display: inline-block;
+      float: right;
+      margin-top: 10px;
+      .fontColor {
+        color: #ff5338;
+        text-decoration: underline;
       }
-      .imgBox{
-          width: 80%;
-          margin: 10px auto;
-
-          .title {
-            display: inline;
-          }
+      .fontColor:hover {
+        cursor: pointer;
       }
+    }
+    .imgBox {
+      width: 80%;
+      margin: 10px auto;
+      h1 {
+        margin: 0;
+      }
+      .title {
+        display: inline;
+      }
+    }
   }
   .main {
-      width: 100%;
-      .main_container{
-          width: 40%;
-          margin: 0 auto;
+    width: 100%;
+    .main_container {
+      width: 40%;
+      margin: 0 auto;
 
-          .fontStyle {
-                  width: 100%;
-                 text-align: center;
-                 color: #FF5338;
-          }
+      .fontStyle {
+        width: 100%;
+        text-align: center;
+        color: #ff5338;
       }
+    }
   }
-  .dialog-footer{
-      text-align: center;
+  .dialog-footer {
+    text-align: center;
   }
-  .dialogBox{
-      text-align: center;
-      img {
-         width: 24px;
-         vertical-align: middle;
-         margin-right: 6px;
-
-      }
-      .dialogMT{
-          margin-top: 10px;
-      }
+  .dialogBox {
+    text-align: center;
+    img {
+      width: 24px;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    .dialogMT {
+      margin-top: 10px;
+    }
   }
- }
-
+}
 </style>
-<style >
- .audit-container .el-header{
-      padding: 0;
-  }
-  .audit-container .el-card__body{
-        padding: 0;
-  }
-  .audit-container .el-radio__input.is-checked+.el-radio__label{
-      color: #FF5338;
-  }
- .audit-container .el-radio__input.is-checked .el-radio__inner{
-     border-color: #FF5338;
-    background: #FF5338;
-  }
- .audit-container .el-radio__inner:hover{
-      border: 1px solid #FF5338;
-  }
-  .audit-container .el-cascader {
-      width: 100%;
-  }
+<style>
+.audit-container .el-header {
+  padding: 0;
+}
+.audit-container .el-card {
+  padding: 0;
+}
+.audit-container .el-card__body {
+  padding: 0;
+}
+.audit-container .el-radio__input.is-checked + .el-radio__label {
+  color: #ff5338;
+}
+.audit-container .el-radio__input.is-checked .el-radio__inner {
+  border-color: #ff5338;
+  background: #ff5338;
+}
+.audit-container .el-radio__inner:hover {
+  border: 1px solid #ff5338;
+}
+.audit-container .el-cascader {
+  width: 100%;
+}
 </style>

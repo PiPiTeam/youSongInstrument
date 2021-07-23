@@ -59,7 +59,6 @@ const permission = {
 
 export function recursionRoutesMap(routes) {
   const res = []
-  console.log(routes)
   routes.forEach((route, index) => {
     const tmp = { ...route }
     //* menuType: 0 目录 1 页面 2 按钮
@@ -79,9 +78,7 @@ export function recursionRoutesMap(routes) {
       } else if (tmp.component === 'NullRouterView') {
         tmp.component = NullRouterView
       } else {
-        console.log(loadView(tmp.component))
         tmp.component = loadView(tmp.component)
-        console.log(tmp.component)
       }
     }
     // 转换数据

@@ -2,44 +2,82 @@
   <el-container class="boxRegistered">
     <el-header>
       <el-card class="box-card">
-        <el-row class="imgBox" type="flex" justify="space-between" align="middle">
-          <h2 @click="$router.push('/login')">优颂乐器</h2>
-          <span class="rightBox">已有账户, <span class="fontColor" @click="linkTo()">立即登录</span></span>
+        <el-row
+          class="imgBox"
+          type="flex"
+          justify="space-between"
+          align="middle"
+        >
+          <h1 @click="$router.push('/login')">优颂乐器</h1>
+          <span
+            class="rightBox"
+          >已有账户,
+            <span class="fontColor" @click="linkTo()">立即登录</span></span>
         </el-row>
       </el-card>
     </el-header>
     <el-main class="main">
       <div class="main_container">
         <h3 class="fontStyle">找回密码</h3>
-        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          label-width="120px"
+          class="demo-ruleForm"
+        >
           <!-- <el-form-item label="手机号" prop="phoneNumber">
                       <el-input v-model.number="ruleForm.phoneNumber" placeholder="请输入您的手机号码" ></el-input>
                     </el-form-item> -->
           <el-form-item label="密码" prop="password">
-            <el-input v-model="ruleForm.password" type="password" placeholder="请输入您的密码" />
+            <el-input
+              v-model="ruleForm.password"
+              type="password"
+              placeholder="请输入您的密码"
+            />
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="ruleForm.confirmPassword" type="password" placeholder="请再次输入您的密码" />
+            <el-input
+              v-model="ruleForm.confirmPassword"
+              type="password"
+              placeholder="请再次输入您的密码"
+            />
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="ruleForm.email" placeholder="请输入您的邮箱" style="width: 40%;" />
+            <el-input
+              v-model="ruleForm.email"
+              placeholder="请输入您的邮箱"
+              style="width: 40%;"
+            />
             <!-- <el-button type="primary" style="margin-left: 6px;background:#FF5338 ;border:none;"  @click="handleSendVerificationCode()">获取验证码</el-button> -->
-            <input v-model="codeMsg" type="button" class="getNumber" :disabled="codeDisabled" style="width: 22%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;" @click="getCode">
+            <input
+              v-model="codeMsg"
+              type="button"
+              class="getNumber"
+              :disabled="codeDisabled"
+              style="width: 22%;height: 40px; margin-left: 6px;background:#FF5338;border-radius: 4px; border: none; color: #fff;outline:medium;"
+              @click="getCode"
+            >
           </el-form-item>
           <el-form-item label="验证码" prop="emailVerificationCode">
-            <el-input v-model="ruleForm.emailVerificationCode" placeholder="请输入您的验证码" />
+            <el-input
+              v-model="ruleForm.emailVerificationCode"
+              placeholder="请输入您的验证码"
+            />
           </el-form-item>
           <!-- <el-form-item label="验证码" prop="desc">
 
                     </el-form-item> -->
           <el-form-item>
-            <el-button type="primary" style="width:100%;margin:30px 0;background:#FF5338 ;border:none;" @click="submitForm('ruleForm')">确认重置</el-button>
+            <el-button
+              type="primary"
+              style="width:100%;margin:30px 0;background:#FF5338 ;border:none;"
+              @click="submitForm('ruleForm')"
+            >确认重置</el-button>
           </el-form-item>
         </el-form>
       </div>
-
     </el-main>
-
   </el-container>
 </template>
 
@@ -105,7 +143,11 @@ export default {
 
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'change']
+          }
         ],
         emailVerificationCode: [
           { required: true, message: '请输入邮箱验证码', trigger: 'change' }
@@ -113,7 +155,6 @@ export default {
         //   InstitutionAddress: [
         //     { type: 'array',  required: true, message: '请填写机构地址', trigger: 'blur' }
         //   ],
-
       },
       valTextarea: '',
       props: {
@@ -129,9 +170,7 @@ export default {
       textHidden: false
     }
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     getCode() {
       // 验证码60秒倒计时
@@ -167,25 +206,23 @@ export default {
         type: 'reset'
       }
 
-      await getSendVerificationCode(formdata).then(res => {
-
-      }).catch(error => {
-        this.$message.error(error)
-      })
+      await getSendVerificationCode(formdata)
+        .then(res => {})
+        .catch(error => {
+          this.$message.error(error)
+        })
     },
     dialogVisibleSucced() {
       this.dialogVisible = false
       this.$router.push('/login')
     },
-    handleHttpRequestRegistered() {
-
-    },
+    handleHttpRequestRegistered() {},
 
     linkTo() {
       this.$router.push('/login')
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           const formdata = {
             email: this.ruleForm.email,
@@ -193,17 +230,19 @@ export default {
             passwordCopy: this.ruleForm.confirmPassword,
             verificationCode: this.ruleForm.emailVerificationCode
           }
-          getResetPassword(formdata).then(res => {
-            if (res.data.code === '10000') {
-              this.$message({
-                message: '重置密码成功',
-                type: 'success'
-              })
-              this.$router.push('/login')
-            }
-          }).catch(error => {
-            this.$message.error(error)
-          })
+          getResetPassword(formdata)
+            .then(res => {
+              if (res.data.code === '10000') {
+                this.$message({
+                  message: '重置密码成功',
+                  type: 'success'
+                })
+                this.$router.push('/login')
+              }
+            })
+            .catch(error => {
+              this.$message.error(error)
+            })
           //   this.$store.dispatch('getRegistered', params).then(res => {
           //      this.dialogVisible = true
           //     this.textHidden = true
@@ -227,83 +266,79 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- .boxRegistered{
-     width: 100%;
-     .box-card{
-      width: 100%;
-      padding: 0;
-      .rightBox{
-       display: inline-block;
-       float: right;
-       margin-top: 10px;
-       .fontColor{
-           color: #FF5338;
-           text-decoration: underline;
-       }
-       .fontColor:hover {
-           cursor: pointer;
-       }
+.boxRegistered {
+  width: 100%;
+  .box-card {
+    width: 100%;
+    padding: 0;
+    .rightBox {
+      display: inline-block;
+      float: right;
+      margin-top: 10px;
+      .fontColor {
+        color: #ff5338;
+        text-decoration: underline;
       }
-      .imgBox{
-
-          width: 80%;
-          margin: 0 auto;
-
-          img {
-              width: 290px;
-
-          }
+      .fontColor:hover {
+        cursor: pointer;
       }
+    }
+    .imgBox {
+      width: 80%;
+      margin: 10px auto;
+      height: 48px;
+      img {
+        width: 290px;
+      }
+    }
   }
   .main {
-      width: 100%;
-      .main_container{
-          width: 40%;
-          margin: 0 auto;
+    width: 100%;
+    .main_container {
+      width: 40%;
+      margin: 0 auto;
 
-          .fontStyle {
-                  width: 100%;
-                 text-align: center;
-                 color: #FF5338;
-          }
+      .fontStyle {
+        width: 100%;
+        text-align: center;
+        color: #ff5338;
       }
+    }
   }
-  .dialog-footer{
-      text-align: center;
+  .dialog-footer {
+    text-align: center;
   }
-  .dialogBox{
-      text-align: center;
-      img {
-         width: 24px;
-         vertical-align: middle;
-         margin-right: 6px;
-
-      }
-      .dialogMT{
-          margin-top: 10px;
-      }
+  .dialogBox {
+    text-align: center;
+    img {
+      width: 24px;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    .dialogMT {
+      margin-top: 10px;
+    }
   }
- }
-
+}
 </style>
-<style >
- .boxRegistered .el-header{
-      padding: 0;
-  }
-  .boxRegistered .el-card__body{
-        padding: 0;
-  }
-  .boxRegistered .el-radio__input.is-checked+.el-radio__label{
-      color: #FF5338;
-  }
- .boxRegistered .el-radio__input.is-checked .el-radio__inner{
-     border-color: #FF5338;
-    background: #FF5338;
-  }
- .boxRegistered .el-radio__inner:hover{
-      border: 1px solid #FF5338;
-  }
-  .boxRegistered .el-cascader {
-      width: 100%;
-  }
+<style>
+.boxRegistered .el-header {
+  padding: 0;
+}
+.boxRegistered .el-card__body {
+  padding: 0;
+}
+.boxRegistered .el-radio__input.is-checked + .el-radio__label {
+  color: #ff5338;
+}
+.boxRegistered .el-radio__input.is-checked .el-radio__inner {
+  border-color: #ff5338;
+  background: #ff5338;
+}
+.boxRegistered .el-radio__inner:hover {
+  border: 1px solid #ff5338;
+}
+.boxRegistered .el-cascader {
+  width: 100%;
+}
 </style>

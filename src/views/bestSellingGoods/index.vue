@@ -325,7 +325,6 @@ export default {
         this.tableData = data.data.records
         this.pager.current = data.data.current
         this.pager.total = data.data.total
-        this.loading = false
       } finally {
         this.loading = false
       }

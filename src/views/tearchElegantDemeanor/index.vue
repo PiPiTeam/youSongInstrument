@@ -6,7 +6,7 @@
         <el-button class="mt-13" @click="addTearcher">新增</el-button>
       </span>
     </el-row>
-    <div>
+    <div v-loading="loading">
       <el-row v-for="(item, index) of tearcher.tearcherList" :key="index" type="flex">
         <el-form :ref="'tearchForm'+index" v-model="tearcher.tearcherList[index]" label-position="left" label-width="120px" style="width:85%;">
           <el-form-item :label="'老师'+(index+1)+'姓名'">
@@ -85,6 +85,7 @@ export default {
       imgHost: process.env.VUE_APP_IMAGE_HOST,
       dialogVisible: false,
       dialogImageUrl: '',
+      loading: true,
       tearcher: {
         tearcherList: [{
           title: '',
@@ -174,18 +175,22 @@ export default {
       console.log(data)
     },
     async _getTearchList() {
-      const { data } = await getTearchList({ storeId: this.shopId })
-      console.log(data)
-      if (data.code === '10000') {
-        data.data.map(item => {
-          item.imgFileList.map(v => {
-            v.url = this.imgHost + v.path + v.name
+      try {
+        this.loading = true
+        const { data } = await getTearchList({ storeId: this.shopId })
+        console.log(data)
+        if (data.code === '10000') {
+          data.data.map(item => {
+            item.imgFileList.map(v => {
+              v.url = this.imgHost + v.path + v.name
+            })
+            item.imgFiles = item.imgFileList
           })
-          item.imgFiles = item.imgFileList
-        })
+        }
+        this.tearcher.tearcherList = data.data
+      } finally {
+        this.loading = false
       }
-      this.tearcher.tearcherList = data.data
-      console.log(this.tearcher.tearcherList)
     },
     async uploadFile() {
       const formData = new FormData()

@@ -1,7 +1,7 @@
 <template>
   <!-- 热门课程 -->
   <div class="popular-courses">
-    <el-row v-if="!dataForm.id" class="red pl-20">暂无课程，请先创建课程</el-row>
+    <el-row v-if="noCourses" class="red pl-20">暂无课程，请先创建课程</el-row>
     <el-form ref="formRef" :model="dataForm" :rules="rules" label-width="100px" label-position="right">
       <el-form-item label="课程名称" prop="title">
         <el-input v-model="dataForm.title" placeholder="请输入活动名称" />
@@ -100,7 +100,8 @@ export default {
         fileList: [
           { required: true, message: '请上传课程图片', trigger: 'change' }
         ]
-      }
+      },
+      noCourses: false
     }
   },
   computed: {
@@ -189,6 +190,9 @@ export default {
         console.log(data.data[0].imgFileList)
         data.data[0].fileList = data.data[0].imgFileList
         this.dataForm = data.data[0]
+        this.noCourses = false
+      } else {
+        this.noCourses = true
       }
     },
     async uploadFile() {
