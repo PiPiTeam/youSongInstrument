@@ -160,7 +160,6 @@ export default {
     },
     async _addTeacher(dataForm, index) {
       const { data } = await addTeacher(dataForm)
-      console.log(data)
       if (data.code === '10000') {
         this.$message.success(data.message)
         data.data.imgFileList.map(v => {
@@ -172,13 +171,12 @@ export default {
     },
     async _updataTeacher(dataForm) {
       const { data } = await updataTeacher(dataForm)
-      console.log(data)
+      this.$message.success(data.message)
     },
     async _getTearchList() {
       try {
         this.loading = true
         const { data } = await getTearchList({ storeId: this.shopId })
-        console.log(data)
         if (data.code === '10000') {
           data.data.map(item => {
             item.imgFileList.map(v => {

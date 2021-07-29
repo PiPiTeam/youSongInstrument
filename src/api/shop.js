@@ -175,6 +175,15 @@ export function updataCourse(data) {
   })
 }
 
+// 删除课程
+export function deleteCourse(data) {
+  return request({
+    url: `/course`,
+    method: 'delete',
+    data
+  })
+}
+
 // 删除课程图片
 export function deleteCourseImg(id, data) {
   return request({

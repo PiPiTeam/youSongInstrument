@@ -40,6 +40,23 @@ export default {
       this.$router.go(-1)
     },
     submit() {
+      const contentText = this.editor.txt.text()
+      const contentJson = this.editor.txt.getJSON()
+      let imgSrc = ''
+      for (const item of contentJson) {
+        if (imgSrc) break
+        if (item.tag === 'p') {
+          for (const innerItem of item.children) {
+            if (innerItem.tag === 'img') {
+              // 获取src
+              imgSrc = innerItem.attrs[0].value
+              break
+            }
+          }
+        }
+      }
+      console.log(imgSrc)
+      console.log(contentText)
       if (this.id) {
         this._updataActivity({
           id: this.id,
