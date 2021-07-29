@@ -104,6 +104,15 @@ export function addActivity(data) {
   })
 }
 
+// 上传活动图片
+export function uploadActivityImg(data) {
+  return request({
+    url: `/activity/image`,
+    method: 'post',
+    data
+  })
+}
+
 // 修改活动 id
 export function updataActivity(data) {
   return request({

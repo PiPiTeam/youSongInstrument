@@ -16,10 +16,11 @@
 <script>
 import Wangeditor from 'wangeditor'
 import { getShopId } from '@/utils/auth'
-import { addActivity, getActivityDetail, updataActivity } from '@/api/shop'
+import { addActivity, getActivityDetail, updataActivity, uploadActivityImg } from '@/api/shop'
 export default {
   data() {
     return {
+      imgHost: process.env.VUE_APP_IMAGE_HOST,
       shopId: getShopId() || '',
       id: '',
       title: '',
@@ -29,6 +30,18 @@ export default {
   mounted() {
     console.log(this.$route.query)
     this.editor = new Wangeditor('#editor')
+    this.editor.config.height = 700
+    this.editor.config.uploadImgMaxLength = 1
+    this.editor.config.customUploadImg = async(resultFiles, insertImgFn) => {
+      // resultFiles 是 input 中选中的文件列表
+      const formData = new FormData()
+      formData.append('file', resultFiles[0])
+      const { data } = await uploadActivityImg(formData)
+      // insertImgFn 是获取图片 url 后，插入到编辑器的方法
+      // 上传图片，返回结果，将图片插入到编辑器中
+      console.log(this.imgHost + data.data)
+      insertImgFn(this.imgHost + data.data)
+    }
     this.editor.create()
     if (this.$route.query && this.$route.query.id) {
       this.id = this.$route.query.id
@@ -55,19 +68,21 @@ export default {
           }
         }
       }
-      console.log(imgSrc)
-      console.log(contentText)
       if (this.id) {
         this._updataActivity({
           id: this.id,
           title: this.title,
-          content: this.editor.txt.html()
+          content: this.editor.txt.html(),
+          image: imgSrc,
+          brief: contentText.substring(0, 50)
         })
       } else {
         this._addActivity({
           storeId: this.shopId,
           title: this.title,
-          content: this.editor.txt.html()
+          content: this.editor.txt.html(),
+          image: imgSrc,
+          brief: contentText.substring(0, 50)
         })
       }
     },
@@ -100,5 +115,8 @@ export default {
 }
 .m-10 {
   margin: 10px 0;
+}
+#edit {
+  height: 600px;
 }
 </style>
