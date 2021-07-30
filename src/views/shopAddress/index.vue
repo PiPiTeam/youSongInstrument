@@ -36,7 +36,7 @@
       </el-form-item>
     </el-form>
     <el-row type="flex" justify="center">
-      <el-button type="primary" @click="submit">保存</el-button>
+      <el-button :loading="saveLoading" type="primary" @click="submit">保存</el-button>
     </el-row>
     <!-- 预览图片 -->
     <el-dialog :visible.sync="dialogVisible">
@@ -67,6 +67,7 @@ export default {
       },
       isEdit: false,
       shopInfo: {},
+      saveLoading: false,
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -144,16 +145,26 @@ export default {
       }
     },
     async _addStore(formData) {
-      const { data } = await addStore(formData)
-      if (data.code === '10000') {
-        this.$message.success('保存成功')
-        this._getShopList()
+      try {
+        this.saveLoading = true
+        const { data } = await addStore(formData)
+        if (data.code === '10000') {
+          this.$message.success('保存成功')
+          this._getShopList()
+        }
+      } finally {
+        this.saveLoading = false
       }
     },
     async _updateStore(formData) {
-      const { data } = await updateStore(formData)
-      console.log(data)
-      this.$message.success('保存成功')
+      try {
+        this.saveLoading = true
+        const { data } = await updateStore(formData)
+        console.log(data)
+        this.$message.success('保存成功')
+      } finally {
+        this.saveLoading = false
+      }
     }
   }
 }

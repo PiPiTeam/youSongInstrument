@@ -30,7 +30,7 @@
       >
         <template slot-scope="scope">
           <el-button size="mini" @click="edit(scope.row)">修改</el-button>
-          <el-button type="danger" size="mini">删除</el-button>
+          <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -163,7 +163,7 @@
 
 <script>
 import { getShopId } from '@/utils/auth'
-import { getProductPageList, addProduct, getProductFollowerPage, getProductById, updataProduct, addProductImg, deleteProductImg } from '@/api/shop'
+import { getProductPageList, addProduct, getProductFollowerPage, getProductById, updataProduct, addProductImg, deleteProductImg, deleteProduct } from '@/api/shop'
 import Pagination from '@/components/Pagination'
 export default {
   name: 'BestSellingGoods',
@@ -253,6 +253,12 @@ export default {
       this._getProductById(row.id)
       this.dialog.title = '修改'
       this.dialog.visible = true
+    },
+    async remove(row) {
+      const formData = new FormData()
+      formData.append('ids', row.id)
+      const { data } = await deleteProduct(formData)
+      if (data.code === '10000') { this._getPageList() }
     },
     submit() {
       this.$refs.formRef.validate(valid => {

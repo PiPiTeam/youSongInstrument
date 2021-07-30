@@ -202,6 +202,15 @@ export function deleteCourseImg(id, data) {
   })
 }
 
+// 课程关注用户
+export function getCourseFollowerPage(params) {
+  return request({
+    url: `/course/follower/page-list`,
+    method: 'get',
+    params
+  })
+}
+
 // 产品分页
 export function getProductPageList(params) {
   return request({
@@ -234,6 +243,14 @@ export function updataProduct(data) {
   return request({
     url: `/product`,
     method: 'put',
+    data
+  })
+}
+
+export function deleteProduct(data) {
+  return request({
+    url: `/product`,
+    method: 'delete',
     data
   })
 }
