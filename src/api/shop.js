@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-//获取课程分类列表
+// 获取课程分类列表
 export function getCourseSortList(params) {
   return request({
     url: '/course-sort/list',
