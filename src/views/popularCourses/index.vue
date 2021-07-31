@@ -11,7 +11,7 @@
         </el-select>
       </div>
       <div>
-        <el-button>课程分类</el-button>
+        <el-button @click="sortList">课程分类</el-button>
         <el-button @click="add">新增</el-button>
       </div>
     </el-row>
@@ -178,12 +178,113 @@
         />
       </div>
     </el-dialog>
+    <!-- 课程分类列表 -->
+    <el-dialog
+      width="50%"
+      :title="sortDialog.title"
+      :visible.sync="sortDialog.visible"
+      append-to-body
+    >
+      <el-button @click="addsort">新增</el-button>
+      <el-table
+        :data="sortDialog.tableData"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="id"
+          label="id"
+        />
+        <el-table-column
+          prop="name"
+          label="名称"
+        />
+        <el-table-column
+          prop="coverImage"
+          label="封面"
+        >
+          <template slot-scope="scope"><img :src="scope.row.coverImage"></template>
+        </el-table-column>
+        <el-table-column
+        label="操作"
+        width="150"
+      >
+        <template slot-scope="scope">
+          <el-button size="mini" @click="editSort(scope.row)">修改</el-button>
+          <el-button type="danger" size="mini" @click="removeSort(scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+      </el-table>
+    </el-dialog>
+    <!-- 课程分类列表弹窗 -->
+    <el-dialog
+      width="50%"
+      top="5%"
+      :title="sortDialogs.title"
+      :visible.sync="sortDialogs.visible"
+      append-to-body
+      @close="sortDialogsClose"
+    >
+      <el-form ref="formRefs" :model="dataForms" :rules="sortRules" label-width="100px" label-position="right">
+        <el-form-item label="分类名称" prop="name">
+          <el-input v-model="dataForms.name" placeholder="请输入分类名称" />
+        </el-form-item>
+        <el-form-item v-if="dataForms.id" label="分类图片" prop="fileList">
+          <div>
+            <ul class="el-upload-list el-upload-list--picture-card f-l">
+              <li v-for="_file in dataForms.fileList" :key="_file.id" class="el-upload-list__item is-ready ">
+                <div>
+                  <img :src="_file.url" alt="" class="el-upload-list__item-thumbnail">
+                  <span class="el-upload-list__item-actions">
+                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(_file)">
+                      <i class="el-icon-zoom-in" />
+                    </span>
+                    <!-- <span class="el-upload-list__item-delete" @click="handleRemove(_file)">
+                      <i class="el-icon-delete" />
+                    </span> -->
+                  </span>
+                </div>
+              </li>
+            </ul>
+            <el-upload
+              class="f-l"
+              action="/"
+              :limit="5"
+              :show-file-list="false"
+              :auto-upload="true"
+              :http-request="uploadFiles"
+              :on-change="handleChangeUpdata"
+            >
+              <div v-show="dataForms.fileList.length < 5" slot="default" class="el-upload el-upload--picture-card">
+                <i class="el-icon-plus" />
+                <input type="file" name="file" class="el-upload__input">
+              </div>
+            </el-upload>
+          </div>
+        </el-form-item>
+        <el-form-item v-else label="分类图片" prop="fileList">
+          <el-upload
+            action="/"
+            list-type="picture-card"
+            :auto-upload="false"
+            :on-change="handleChanges"
+            :on-preview="handlePictureCardPreview"
+            :file-list="dataForms.fileList"
+          >
+            <i class="el-icon-plus" />
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <el-row type="flex" justify="center">
+        <el-button type="primary" @click="submits">保存</el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getShopId } from '@/utils/auth'
-import { getCoursePageList, addCourse, updataCourse, addCourseImg, deleteCourseImg, deleteCourse, getCourseFollowerPage } from '@/api/shop'
+import { getCoursePageList, addCourse, updataCourse, addCourseImg, deleteCourseImg,
+deleteCourse, getCourseFollowerPage, getCourseSortList, addCourseSort, updateCourseSort, deleteCourseSort } from '@/api/shop'
 export default {
   name: 'PopularCourses',
   data() {
@@ -215,12 +316,37 @@ export default {
         courseId: '',
         tableData: []
       },
+      sortDialog: {
+        visible: false,
+        title: '',
+        courseId: '',
+        tableData: []
+      },
+      sortDialogs: {
+        visible: false,
+        title: '新增',
+      },
+      dataForms: {
+        id: '',
+        name: '',
+        storeId: '',
+        imageFile: '',
+        fileList: []
+      },
       followPage: {
         current: 1,
         size: 10,
         total: 0
       },
       file: '',
+      sortRules:{
+        name: [
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ],
+        fileList: [
+          { required: true, message: '请上传分类封面', trigger: 'blur' }
+        ],
+      },
       rules: {
         title: [
           { required: true, message: '请输入课程名称', trigger: 'blur' }
@@ -252,6 +378,117 @@ export default {
     this._getCoursePageList()
   },
   methods: {
+    sortList(){
+      this.sortDialog.title = '课程分类列表'
+      this.sortDialog.visible = true
+      this.followPage.current = 1
+      this._getCourseSortList()
+    },
+    async _getCourseSortList(){
+      const { data } = await getCourseSortList(Object.assign(this.followPages, { storeId: this.shopId }))
+      console.log(data)
+      this.sortDialog.tableData = data.data
+    },
+    addsort(){
+      this.sortDialogs.title = '新增'
+      this.sortDialogs.visible = true
+    },
+    sortDialogsClose(){
+      this.sortDialogs.visible = false
+      this.dataForms = this.$options.data().dataForms
+    },
+    editSort(row) {
+      row.imgFileList.map(v => {
+        v.url = this.imgHost + v.path + v.name
+      })
+      row.fileList = row.imgFileList
+      this.dataForms = row
+      this.sortDialogs.title = '修改'
+      this.sortDialogs.visible = true
+    },
+    async removeSort(row) {
+      const formData = new FormData()
+      formData.append('ids', row.id)
+      const { data } = await deleteCourseSort(formData)
+      if (data.code === '10000') {
+        this._getCourseSortList()
+      }
+    },
+    async handleRemove(file) {
+      const formData = new FormData()
+      formData.append('fileIds', file.id)
+      const { data } = await deleteCourseImg(this.dataForm.id, formData)
+      if (data.code === '10000') {
+        for (const i in this.dataForm.fileList) {
+          if (this.dataForm.fileList[i].id === file.id) {
+            this.dataForm.fileList.splice(i, 1)
+            break
+          }
+        }
+      }
+    },
+    handleChanges(file, fileList) {
+      const isIMAGE = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      if (!isIMAGE) {
+        this.$message.error('只能上传jpg/png图片!')
+        return false
+      }
+      if (fileList.length && fileList.length >= 1) {
+        this.dataForms.fileList = fileList
+        /** 引用对象然后验证表单域-这个可以清除上一步不通过时的提示*/
+        this.$refs.formRefs.validateField('fileList')
+      }
+    },
+    submits() {
+      this.$refs.formRefs.validate(valid => {
+        if (!valid) return
+        if (this.dataForms.id) {
+          this._updataCourse({
+            id: this.dataForms.id,
+            name: this.dataForms.name,
+            imageFile: this.dataForms.imageFile,
+          })
+          this._updateCourseSort(formData)
+        } else {
+          const formData = new FormData()
+          formData.append('storeId', this.shopId)
+          formData.append('name', this.dataForms.name)
+          formData.append(`imgFile`, this.dataForms.fileList[0].raw)
+          this._addCourseSort(formData)
+        }
+      })
+    },
+    async _addCourseSort(formData) {
+      const { data } = await addCourseSort(formData)
+      if (data.code === '10000') {
+        this.$message.success(data.message)
+        this.sortDialogsClose()
+        this._getCourseSortList()
+      }
+    },
+    async _updateCourseSort(formData) {
+      const { data } = await updateCourseSort(formData)
+      if (data.code === '10000') {
+        this.$message.success(data.message)
+        this.sortDialogsClose()
+        this._getCourseSortList()
+      }
+    },
+    async uploadFiles() {
+      const formData = new FormData()
+      formData.append('files', this.file)
+      const { data } = await addCourseImg(this.dataForms.id, formData)
+      if (data.code === '10000') {
+        data.data.map(v => {
+          this.dataForms.fileList.push({
+            id: v.id,
+            name: v.name,
+            url: this.imgHost + v.path + v.name
+          })
+        })
+      }
+    },
     add() {
       this.dialog.title = '新增'
       this.dialog.visible = true

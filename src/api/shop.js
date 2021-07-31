@@ -1,4 +1,37 @@
 import request from '@/utils/request'
+//获取课程分类列表
+export function getCourseSortList(params) {
+  return request({
+    url: '/course-sort/list',
+    method: 'get',
+    params
+  })
+}
+
+// 新增分类
+export function addCourseSort(data) {
+  return request({
+    url: '/course-sort',
+    method: 'post',
+    data
+  })
+}
+// 更新
+export function updateCourseSort(data) {
+  return request({
+    url: '/course-sort',
+    method: 'put',
+    data
+  })
+}
+// 删除
+export function deleteCourseSort(data) {
+  return request({
+    url: `/course-sort`,
+    method: 'delete',
+    data
+  })
+}
 
 export function getShopList(params) {
   return request({
