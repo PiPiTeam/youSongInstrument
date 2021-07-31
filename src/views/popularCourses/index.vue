@@ -408,4 +408,8 @@ export default {
 .popular-courses {
   margin-top: 20px;
 }
+.reservation-num {
+  color: #409EFF;
+  cursor: pointer;
+}
 </style>
