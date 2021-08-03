@@ -15,6 +15,9 @@
           <el-form-item :label="'学员'+(index+1)+'介绍'">
             <el-input v-model="item.content" type="textarea" placeholder="请输入" />
           </el-form-item>
+          <el-form-item :label="'学员'+(index+1)+'视频'" prop="videoMetasUrl">
+            <el-input v-model="item.videoMetasUrl" placeholder="请输入视频链接(如填入视频则不显示图片)" />
+          </el-form-item>
           <el-form-item v-if="item.id" :label="'学员'+(index+1)+'图片'" prop="imgFiles">
             <div>
               <ul class="el-upload-list el-upload-list--picture-card f-l">
@@ -89,7 +92,8 @@ export default {
         studentList: [{
           title: '',
           content: '',
-          imgFiles: []
+          imgFiles: [],
+          videoMetasUrl: ''
         }]
       },
       uploadData: {
@@ -114,7 +118,8 @@ export default {
       this.student.studentList.push({
         title: '',
         content: '',
-        imgFiles: []
+        imgFiles: [],
+        videoMetasUrl: ''
       })
     },
     handleChange(file, fileList, index) {
@@ -139,7 +144,11 @@ export default {
         this._updataStudent({
           id: item.id,
           title: item.title,
-          content: item.content
+          content: item.content,
+          videoMetas: [{
+            title: item.title,
+            url: item.videoMetasUrl
+          }]
         })
       } else {
         const formData = new FormData()
@@ -148,6 +157,10 @@ export default {
         formData.append('content', item.content)
         for (const i in item.imgFiles) {
           formData.append(`imgFiles[${i}]`, item.imgFiles[i].raw)
+        }
+        if (item.videoMetasUrl) {
+          formData.append(`videoMetas[0].title`, item.title)
+          formData.append(`videoMetas[0].url`, item.videoMetasUrl)
         }
         this._addStudent(formData, index)
       }
@@ -166,6 +179,9 @@ export default {
           v.url = this.imgHost + v.path + v.name
         })
         data.data.imgFiles = data.data.imgFileList
+        if (data.data.videoContent) {
+          data.data.videoMetasUrl = JSON.parse(data.data.videoContent)[0].url
+        }
         this.$set(this.student.studentList, index, data.data)
       }
     },
@@ -182,6 +198,10 @@ export default {
             v.url = this.imgHost + v.path + v.name
           })
           item.imgFiles = item.imgFileList
+          if (item.videoContent) {
+            item.videoMetasUrl = JSON.parse(item.videoContent)[0].url
+            console.log(JSON.parse(item.videoContent))
+          }
         })
       }
       this.student.studentList = data.data
